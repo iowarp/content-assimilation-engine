@@ -9,3 +9,9 @@ flowchart TD
 
 * [s.cpp](s.cpp): Transfer a sample CSV file from Globus to local file system.
 * [ydata.ipynb](ydata.ipynb): Measure profiling [performance](https://github.com/iowarp/content-assimilation-engine/wiki/Performance).
+* [requirements.txt](requirements.txt): Install required modules for Python.
+
+# Installation
+
+Use `pip install -r requirements.txt`.
+

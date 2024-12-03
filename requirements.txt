@@ -1,0 +1,4 @@
+globus-cli
+pandas
+pyarrow
+ydata_profiling
