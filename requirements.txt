@@ -1,3 +1,4 @@
+acryl-datahub
 globus-cli
 pandas
 pyarrow
