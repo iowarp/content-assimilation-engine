@@ -1,5 +1,6 @@
 acryl-datahub
 globus-cli
+libtorrentx
 pandas
 pyarrow
 ydata_profiling
