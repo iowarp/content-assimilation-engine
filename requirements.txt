@@ -3,4 +3,5 @@ globus-cli
 libtorrentx
 pandas
 pyarrow
+pydap
 ydata_profiling
