@@ -2,7 +2,9 @@ acryl-datahub
 globus-cli
 libtorrentx
 pandas
+pelicanfs
 pyarrow
 pydap
 python-irodsclient
+xrootd
 ydata_profiling
