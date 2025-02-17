@@ -9,10 +9,37 @@ SHELL ["/bin/bash", "-c"]
 RUN apt update && apt install
 
 RUN apt install -y \
-    cmake \
-    git \
-    python3-pip \
-    python3.12-venv
+          bash \
+          cmake \
+          ceph-dev \
+          curl \
+          curl-dev \
+          fuse-dev \
+          fuse3-dev \
+          g++ \
+          git \
+          gtest-dev \
+          isa-l-dev \
+          json-c-dev \
+          krb5-dev \
+          libxml2-dev \
+          linux-headers \
+          make \
+          openssl \
+          openssl-dev \
+          procps \
+          py3-pip \
+          py3-setuptools \
+          py3-wheel \
+          python3-dev \
+          python3-pip \
+          python3.12-venv \
+          readline-dev \
+          sudo \
+          tinyxml-dev \
+          util-linux-dev \
+          uuidgen \
+          zlib-dev
 
 ENV USER="root"
 ENV HOME="/root"
