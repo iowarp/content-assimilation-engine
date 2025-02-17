@@ -4,4 +4,5 @@ libtorrentx
 pandas
 pyarrow
 pydap
+python-irodsclient
 ydata_profiling
