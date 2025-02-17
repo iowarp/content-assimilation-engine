@@ -9,6 +9,7 @@ SHELL ["/bin/bash", "-c"]
 RUN apt update && apt install
 
 RUN apt install -y \
+    cmake \
     git \
     python3-pip \
     python3.12-venv
