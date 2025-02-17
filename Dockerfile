@@ -14,16 +14,21 @@ RUN apt install -y \
           curl \
           g++ \
           git \
+          libcurl4-openssl-dev \
+          libreadline-dev \
+          libssl-dev \
+          libsystemd-dev \
+          libtinyxml2-dev \
           libxml2-dev \
           make \
           openssl \
-          openssl-dev \
           procps \
           python3-dev \
           python3-pip \
           python3.12-venv \
           sudo \
-          uuid-dev
+          uuid-dev \
+          xrootd-client xrootd-server python3-xrootd
 
 ENV USER="root"
 ENV HOME="/root"

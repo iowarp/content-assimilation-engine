@@ -6,5 +6,4 @@ pelicanfs
 pyarrow
 pydap
 python-irodsclient
-xrootd
 ydata_profiling
