@@ -1,4 +1,5 @@
 acryl-datahub
+boto3
 globus-cli
 libtorrentx
 pandas
