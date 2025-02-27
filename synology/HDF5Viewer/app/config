@@ -1,0 +1,7 @@
+{
+    "icon": "images/icon.png",
+    "type": "url",
+    "url": "ui/index.html",
+    "title": "HDF5 Viewer",
+    "description": "View HDF5 files"
+}

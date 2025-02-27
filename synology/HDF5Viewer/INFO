@@ -1,0 +1,7 @@
+package="HDF5Viewer"
+version="1.0"
+displayname="HDF5 Viewer"
+description="A viewer for HDF5 files"
+arch="noarch"
+maintainer="IOWarp"
+depend="Python3"
