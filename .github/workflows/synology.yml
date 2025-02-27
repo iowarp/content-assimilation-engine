@@ -1,0 +1,27 @@
+name: synology
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4    
+      - name: test
+        shell: bash
+        run: |
+          mkdir source
+          git clone https://github.com/SynologyOpenSource/pkgscripts-ng
+          cd pkgscripts-ng
+          sudo ./EnvDeploy -v 7.2 -p geminilake
+          cp -r ../synology/HDF5Viewer ../source
+          sudo ./PkgCreate.py -v 7.2 -p geminilake -c HDF5Viewer
+          ls ../result_spk
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: HDF5Viewer-1.0.0
+          path: ./result_spk/HDF5Viewer-1.0.0
