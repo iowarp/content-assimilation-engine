@@ -16,9 +16,9 @@ jobs:
           mkdir source
           git clone https://github.com/SynologyOpenSource/pkgscripts-ng
           cd pkgscripts-ng
-          sudo ./EnvDeploy -v 7.2 -p geminilake
+          sudo ./EnvDeploy -v 7.2 -p grantley
           cp -r ../synology/HDF5Viewer ../source
-          sudo ./PkgCreate.py -v 7.2 -p geminilake -c HDF5Viewer
+          sudo ./PkgCreate.py -v 7.2 -p grantley -c HDF5Viewer
           ls ../result_spk
       - name: upload
         uses: actions/upload-artifact@v4
