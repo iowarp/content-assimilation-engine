@@ -23,7 +23,8 @@ create_package_tgz() {
 }
 
 create_spk(){
-	cp -av scripts $PKG_DIR/scripts
+        cp -av scripts $PKG_DIR/scripts
+	cp -av conf $PKG_DIR/conf
 	cp INFO $PKG_DIR/INFO
 	mkdir -p /image/packages
 	pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
