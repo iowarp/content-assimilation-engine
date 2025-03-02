@@ -3,7 +3,7 @@ name: synology
 on:
   push:
     branches:
-      - main-
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,12 +16,12 @@ jobs:
           mkdir source
           git clone https://github.com/SynologyOpenSource/pkgscripts-ng
           cd pkgscripts-ng
-          sudo ./EnvDeploy -v 7.2 -p grantley
+          sudo ./EnvDeploy -v 7.2 -p greylake
           cp -r ../synology/HDF5Viewer ../source
-          sudo ./PkgCreate.py -v 7.2 -p grantley -c HDF5Viewer
+          sudo ./PkgCreate.py -v 7.2 -p greylake -c HDF5Viewer
           ls ../result_spk
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: HDF5Viewer-1.0.0
-          path: ./result_spk/HDF5Viewer-1.0.0
+          name: HDF5Viewer-0.0.0-0001
+          path: ./result_spk/HDF5Viewer-0.0.0-0001
