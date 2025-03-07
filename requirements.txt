@@ -1,10 +1,10 @@
-acryl-datahub[datahub]
-boto3[s3]
-globus-cli[globus]
-libtorrentx[torrent]
+acryl-datahub [datahub]
+boto3 [s3]
+globus-cli [globus]
+libtorrentx [torrent]
 pandas
-pelicanfs[pelican]
+pelicanfs [pelican]
 pyarrow
-pydap[opendap]
-python-irodsclient[irods]
-ydata_profiling[datahub]
+pydap [opendap]
+python-irodsclient [irods]
+ydata_profiling [datahub]
