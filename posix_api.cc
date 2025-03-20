@@ -550,4 +550,8 @@ int HERMES_DECL(unlink)(const char *pathname) {
   return real_api->unlink(pathname);
 }
 
+  int main() {
+    printf("cae posix\n");
+  }
+  
 }  // extern C

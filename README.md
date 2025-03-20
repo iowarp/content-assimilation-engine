@@ -9,7 +9,9 @@ flowchart TD
  D-->|stage-out| B
 ```
 
+* [b.cc](b.cc): Backend Sample
 * [g.py](g.py): Transfer files from Globus to local file system.
+* [posix_api.cc](posix_api.cc): Frontend Sample
 * [s.cpp](s.cpp): Transfer a sample CSV file from Globus to local file system.
 * [ydata.ipynb](ydata.ipynb): Measure profiling [performance](https://github.com/iowarp/content-assimilation-engine/wiki/Performance).
 * [requirements.txt](requirements.txt): Install required modules for Python.
@@ -22,5 +24,9 @@ Use `pip install -r requirements.txt`.
 
 ## vcpkg
 
-First, run `vcpkg integrate install` on `iowarp-install/vcpkg`.
-Then, run `cmake -DCMAKE_TOOLCHAIN_FILE=iowarp-install/vcpkg/scripts/buildsystems/vcpkg.cmake ..`.
+First, run `$ vcpkg integrate install` on `iowarp-install/vcpkg`.
+
+Then, run:
+
+```$ cmake -DCMAKE_TOOLCHAIN_FILE=iowarp-install/vcpkg/scripts/buildsystems/vcpkg.cmake ..```
+
