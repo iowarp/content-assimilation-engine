@@ -16,5 +16,11 @@ flowchart TD
 
 # Installation
 
+## Python
+
 Use `pip install -r requirements.txt`.
 
+## vcpkg
+
+First, run `vcpkg integrate install` on `iowarp-install/vcpkg`.
+Then, run `cmake -DCMAKE_TOOLCHAIN_FILE=iowarp-install/vcpkg/scripts/buildsystems/vcpkg.cmake ..`.
