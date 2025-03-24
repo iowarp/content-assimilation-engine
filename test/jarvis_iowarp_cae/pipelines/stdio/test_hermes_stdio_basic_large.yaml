@@ -1,0 +1,16 @@
+name: hermes_unit_hermes_stdio_basic_large
+env: hermes
+pkgs:
+  - pkg_type: chimaera_run
+    pkg_name: chimaera_run
+    sleep: 5
+    do_dbg: false
+    dbg_port: 4000
+    modules: ['hermes_hermes_core']
+  - pkg_type: hermes_run
+    pkg_name: hermes_run
+  - pkg_type: hermes_stdio_tests
+    pkg_name: hermes_stdio_tests
+    test_file: stdio_basic
+    hermes: true
+    size: large
