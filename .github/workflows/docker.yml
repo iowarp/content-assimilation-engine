@@ -24,7 +24,7 @@ jobs:
       - name: Build and push Dockerfile
         uses: docker/build-push-action@v6
         with:
-          context: ./iowarp-install
+          context: ./iowarp-install/docker
           file: ./iowarp-install/docker/iowarp-base.Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64
