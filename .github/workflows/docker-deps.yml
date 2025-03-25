@@ -1,8 +1,8 @@
-name: docker base
+name: docker deps
 on:
   push:
     branches:
-      - main-
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,8 +25,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./iowarp-install/docker
-          file: ./iowarp-install/docker/iowarp-base.Dockerfile
+          file: ./iowarp-install/docker/iowarp-deps.Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64
           push: true
-          tags: iowarp/iowarp-base:latest
+          tags: iowarp/iowarp-deps:latest

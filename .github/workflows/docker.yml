@@ -9,9 +9,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          repository: iowarp/iowarp-install
-          path: ./iowarp-install
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -24,9 +21,9 @@ jobs:
       - name: Build and push Dockerfile
         uses: docker/build-push-action@v6
         with:
-          context: ./iowarp-install/docker
-          file: ./iowarp-install/docker/iowarp-base.Dockerfile
+          context: .
+          file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: iowarp/iowarp-base:latest
+          tags: iowarp/cae:latest
