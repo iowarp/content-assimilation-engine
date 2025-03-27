@@ -2,7 +2,7 @@ name: docker base
 on:
   push:
     branches:
-      - main
+      - main-
 jobs:
   build:
     runs-on: ubuntu-latest
