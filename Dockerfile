@@ -6,7 +6,7 @@ LABEL description="IOWarp Content Assimilation Engine"
 ARG DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-c"]
-RUN apt update && apt install
+RUN apt update --fix-missing && apt install
 
 RUN apt install -y \
           bash \
@@ -32,8 +32,6 @@ RUN apt install -y \
 
 ENV USER="root"
 ENV HOME="/root"
-
-RUN git clone https://github.com/iowarp/content-assimilation-engine.git && \
-    cd content-assimilation-engine && \
-    python3 -m venv /root && \
+COPY . .
+RUN python3 -m venv /root && \
     /root/bin/pip install -r requirements.txt
