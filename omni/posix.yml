@@ -1,4 +1,4 @@
-# Sample OMNI format in YML
+# Sample OMNI format in YAML
 name: cae posix job
 
 tags:
@@ -18,4 +18,4 @@ size: 106922
 offset: 38
 
 # pread, read()
-nbyte: 68
+nbyte: 30
