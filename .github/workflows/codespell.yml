@@ -1,0 +1,11 @@
+name: codespell
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  codespell:
+    name: codespell
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.7
+      - uses: codespell-project/actions-codespell@master
