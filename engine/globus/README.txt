@@ -1,6 +1,6 @@
 Globus
 
-1. Acess the file `globus::${HOME}/hi.h5`
+1. Access the file `globus::${HOME}/hi.h5`
 2. Read the file `globus::${HOME}/hi.h5`
 3. VFD or VOL fronted intercepts this and converts to iowarp tasks.
 4. Tasks get sent to CTE.

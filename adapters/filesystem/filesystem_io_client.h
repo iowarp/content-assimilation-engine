@@ -248,7 +248,7 @@ struct AdapterStat {
 };
 
 /**
- * Metadta required by Filesystem I/O clients to perform a HermesOpen
+ * Metadata required by Filesystem I/O clients to perform a HermesOpen
  * */
 struct FsIoClientMetadata {
   int hermes_fd_min_, hermes_fd_max_; /**< Min and max fd values (inclusive)*/

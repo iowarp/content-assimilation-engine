@@ -100,7 +100,7 @@ template <typename PosixT>
 using PreloadProgress = hshm::PreloadProgress<PosixT>;
 using hshm::RealApi;
 
-/** Used for compatability with older kernel versions */
+/** Used for compatibility with older kernel versions */
 static int fxstat_to_fstat(int fd, struct stat *stbuf);
 
 /** Pointers to the real posix API */
@@ -264,7 +264,7 @@ class PosixApi : public RealApi {
 #define HERMES_POSIX_API_T hermes::adapter::PosixApi *
 
 namespace hermes::adapter {
-/** Used for compatability with older kernel versions */
+/** Used for compatibility with older kernel versions */
 static int fxstat_to_fstat(int fd, struct stat *stbuf) {
 #ifdef _STAT_VER
   return HERMES_POSIX_API->__fxstat(_STAT_VER, fd, stbuf);

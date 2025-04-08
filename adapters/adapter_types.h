@@ -63,7 +63,7 @@ class AdapterModeConv {
         return "AdapterMode::kWorkflow";
       }
       default: {
-        return "Unkown adapter mode";
+        return "Unknown adapter mode";
       }
     }
   }
