@@ -1,3 +1,4 @@
+find_package(Hermes REQUIRED)
 include_directories(
         ${CMAKE_SOURCE_DIR}
         ${HERMES_SRC_DIR}
@@ -7,8 +8,7 @@ include_directories(
 
 # Create the metadata manager singleton + FS base class
 add_library(hermes_fs_base INTERFACE)
-add_dependencies(hermes_fs_base
-        ${Hermes_CLIENT_DEPS})
+add_dependencies(hermes_fs_base hermes::hermes_core_client)
 target_link_libraries(hermes_fs_base INTERFACE
         MPI::MPI_CXX
         ${Hermes_CLIENT_DEPS})
@@ -19,15 +19,15 @@ target_link_libraries(hermes_fs_base INTERFACE
 install(
         TARGETS
         hermes_fs_base
-        LIBRARY DESTINATION ${HERMES_INSTALL_LIB_DIR}
-        ARCHIVE DESTINATION ${HERMES_INSTALL_LIB_DIR}
-        RUNTIME DESTINATION ${HERMES_INSTALL_BIN_DIR}
+        LIBRARY DESTINATION ${HERMES_LIB_DIR}
+        ARCHIVE DESTINATION ${HERMES_LIB_DIR}
+        RUNTIME DESTINATION ${HERMES_BIN_DIR}
 )
 install(
         FILES
         filesystem_io_client.h
         DESTINATION
-        ${HERMES_INSTALL_INCLUDE_DIR}
+        ${HERMES_INCLUDE_DIR}
         COMPONENT
         headers
 )
