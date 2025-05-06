@@ -1,0 +1,106 @@
+name: ubuntu-24.04 spack-0.23.0 pure
+
+on:
+  workflow_dispatch:
+  push:
+    branches: main
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: checkout spack
+      uses: actions/checkout@v4
+      with:
+        repository: spack/spack
+        ref: v0.23.0
+        path: ./spack
+    - name: checkout iowarp-install
+      uses: actions/checkout@v4
+      with:
+        repository: iowarp/iowarp-install
+        path: ./iowarp-install
+    - name: spack
+      run: |
+        . ./spack/share/spack/setup-env.sh
+        cd ./iowarp-install/
+        spack repo add iowarp-spack
+        spack install iowarp+posix
+    - name: test module
+      run: |
+        sudo apt -y install lmod
+        source /etc/profile.d/lmod.sh
+        . ./spack/share/spack/setup-env.sh
+        spack load iowarp+posix
+        SCSPKG_MODULE_DIR=$(scspkg module dir)
+        echo "module use ${SCSPKG_MODULE_DIR}" >> ~/.bashrc
+        . ~/.bashrc
+        module use ${SCSPKG_MODULE_DIR}
+        scspkg init
+        chi_make_repo ~/my_mod_repo example
+        chi_make_mod ~/my_mod_repo/compressor
+        scspkg create compressor
+        chi_refresh_repo ~/my_mod_repo
+        cd ~/my_mod_repo
+        mkdir build
+        cd build
+        cmake ..  -DCMAKE_INSTALL_PREFIX=$(scspkg pkg root example)
+        make -j
+        make install
+        module avail
+        module load compressor
+        scspkg list
+    - name: test jarvis
+      run: |
+        pwd
+        . ./spack/share/spack/setup-env.sh
+        spack load iowarp+posix
+        spack load iowarp-cte
+        spack load iowarp-runtime
+        jarvis bootstrap from local
+        jarvis rg build
+        export CTE_PATH=`spack find --paths iowarp-cte | grep iowarp | cut -d' ' -f3`
+        echo $CTE_PATH
+        jarvis repo add $CTE_PATH/jarvis/jarvis_hermes
+        export CRE_PATH=`spack find --paths iowarp-runtime | grep iowarp | cut -d' ' -f3`
+        echo $CRE_PATH
+        jarvis repo add $CRE_PATH/jarvis/jarvis_chimaera
+        jarvis env build hermes
+        jarvis ppl index copy jarvis_hermes.hermes.test_hermes
+        jarvis ppl load yaml test_hermes.yaml
+        jarvis ppl run
+        mkdir -p ~/my_mod_repo/jarvis_example/jarvis_example
+        mkdir -p ~/my_mod_repo/jarvis_example/pipelines
+        jarvis repo add ~/my_mod_repo/jarvis_example
+        jarvis repo create compressor app
+        tree ~/my_mod_repo/
+    - name: test cae
+      run: |
+        . ./spack/share/spack/setup-env.sh
+        spack load iowarp+posix
+        mkdir build
+        cd build
+        cmake ..
+        make
+    - name: test engine
+      run: |
+        pwd
+        . ./spack/share/spack/setup-env.sh
+        spack load iowarp+posix
+        cd engine
+        mkdir build
+        cd build
+        cmake ..
+        make
+    - name: test adapter
+      run: |
+        pwd
+        . ./spack/share/spack/setup-env.sh
+        spack load iowarp+posix
+        cd adapters
+        mkdir build
+        cd build
+        cmake ..
+        make
