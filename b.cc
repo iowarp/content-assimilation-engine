@@ -1,5 +1,6 @@
 #include <string>
 #include <hermes/data_stager/stager_factory.h>
+#include <hermes/data_stager/binary_stager.h>
 
 using namespace hermes;
 

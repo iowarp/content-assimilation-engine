@@ -26,6 +26,8 @@ bool posix_intercepted = true;
 #include "hermes_shm/util/logging.h"
 #include "hermes_shm/util/singleton.h"
 #include "posix_fs_api.h"
+#include "chimaera/api/chimaera_client.h"
+#include "chimaera_admin/chimaera_admin_client.h"
 
 using hermes::adapter::AdapterStat;
 using hermes::adapter::File;
@@ -550,7 +552,9 @@ int HERMES_DECL(unlink)(const char *pathname) {
   return real_api->unlink(pathname);
 }
 
-  int main() {
+ CHI_NAMESPACE_INIT  
+ int main() {
+   CHIMAERA_CLIENT_INIT();
     printf("cae posix\n");
   }
   
