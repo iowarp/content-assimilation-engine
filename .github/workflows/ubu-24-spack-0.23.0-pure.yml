@@ -70,6 +70,7 @@ jobs:
         jarvis env build hermes
         jarvis ppl index copy jarvis_hermes.hermes.test_hermes
         jarvis ppl load yaml test_hermes.yaml
+        jarvis pkg conf chimaera_run sleep=5
         jarvis ppl run
         mkdir -p ~/my_mod_repo/jarvis_example/jarvis_example
         mkdir -p ~/my_mod_repo/jarvis_example/pipelines
