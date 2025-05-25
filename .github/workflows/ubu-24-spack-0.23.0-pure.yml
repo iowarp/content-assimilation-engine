@@ -9,6 +9,37 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
+    - name: install sshd
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openssh-server
+        sudo ssh-keygen -A
+    - name: generate ssh key
+      run: |
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+        ssh-keygen -t ed25519 -f ~/.ssh/id_runner_local -N "" -q
+        cat ~/.ssh/id_runner_local.pub >> ~/.ssh/authorized_keys
+        chmod 600 ~/.ssh/authorized_keys
+        sudo chown -R $USER:$USER ~/.ssh
+        ls -la ~/.ssh/
+    - name: start sshd
+      run: |
+        sudo mkdir -p /run/sshd
+        sudo chown root:root /run/sshd
+        sudo chmod 0755 /run/sshd
+        sudo /usr/sbin/sshd &
+        sleep 5
+        echo "Checking if sshd is listening on 127.0.0.1:22..."
+        netstat -tuln | grep 22
+        echo "SSHD should be running internally."
+    - name: test ssh
+      run: |
+        echo "Attempting to SSH to localhost:22..."
+        ssh -vvv -i ~/.ssh/id_runner_local -p 22 runner@localhost \
+          -o StrictHostKeyChecking=no \
+          -o UserKnownHostsFile=/dev/null \
+          "echo 'SSH successful: Whoami is $(whoami) and pwd is $(pwd)' && ls -la"
     - name: checkout
       uses: actions/checkout@v4
     - name: checkout spack
