@@ -1,0 +1,17 @@
+source:
+  type: csv-enricher
+  config:
+    filename: ./file_assets.csv # Path to your CSV file
+    delimiter: "," # CSV column delimiter (default is comma)
+    array_delimiter: "|" # Delimiter for multiple values in tags/owners (default is |)
+    # write_semantics: PATCH # or OVERRIDE. PATCH is default and generally safer.
+    #                        # PATCH will add/update, OVERRIDE will replace all metadata
+    #                        # from this source for the specified URN.
+sink:
+  type: datahub-rest
+  config:
+    server: "http://localhost:8080" # Replace with your DataHub GMS URL
+    token: "YOUR_DATAHUB_API_TOKEN" # Replace with your DataHub API token
+#    
+# Usage: datahub ingest -c csv_ingestion_recipe.yaml
+    

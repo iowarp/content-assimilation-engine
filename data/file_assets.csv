@@ -1,0 +1,2 @@
+resource,subresource,glossary_terms,tags,owners,ownership_type,description,domain,ownership_type_urn
+"urn:li:dataset:(urn:li:dataPlatform:file,blackhole/cae.bin,PROD)",,[urn:li:glossaryTerm:Users],[urn:li:tag:ai|urn:li:tag:utah],[urn:li:corpuser:jake|urn:li:corpuser:scott],CUSTOM,"A46_xx.csv",urn:li:domain:Material Science,urn:li:ownershipType:a0e9176c-d8cf-4b11-963b-f7a1bc2333c9

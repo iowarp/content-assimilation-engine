@@ -1,5 +1,5 @@
 # Sample OMNI format in YAML
-name: cae posix job
+name: cae
 
 tags:
   - ai
@@ -15,8 +15,13 @@ hash: a4580e7e8b49255a3e10599c5222a021bdc9efec6b36c2e6c99f9f05b6dc63f3
 size: 106922
 
 # lseek()
-offset: 38
+offset: 39
 
 # pread, read()
 nbyte: 30
 
+# lambda script
+# run: "../test/lambda.bat"
+run: "../test/lambda.sh"
+
+dest: "s3://iowarp/cae.parquet"
