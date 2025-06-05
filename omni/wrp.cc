@@ -75,10 +75,20 @@ int write_meta(std::string name, std::string tags) {
 }
 
 #ifdef USE_HERMES
+int put_hermes_tags(hermes::Context* ctx, hermes::Bucket* bkt, std::string tags) {
+  hermes::Blob blob(tags.size());
+  memcpy(blob.data(), tags.c_str(), blob.size());
+  hermes::BlobId blob_id = bkt->Put("metadata", blob, *ctx);
+  if (blob_id.IsNull()) {
+    std::cerr << "Error: putting tags into metadata BLOB failed"
+	      << std::endl;    
+    return -1;
+  }
+  return 0;
+}
+
 int put_hermes(std::string name, std::string tags, std::string path,
 	       unsigned char* buffer, int nbyte) {
-  
-  HERMES_INIT();
 
   hermes::Context ctx;
   hermes::Bucket bkt(name);
@@ -87,8 +97,7 @@ int put_hermes(std::string name, std::string tags, std::string path,
   hermes::BlobId blob_id = bkt.Put(path, blob, ctx);
   std::cout << "wrote '" << buffer << "' to '" << name << "' buffer."
 	      << std::endl;
-  return 0;
-  
+  return put_hermes_tags(&ctx, &bkt, tags);
 }
 
 int get_hermes(std::string name, std::string path) {
@@ -181,7 +190,7 @@ int run_lambda(std::string lambda, std::string name, std::string dest) {
 #ifdef _WIN32
   std::string extension = get_ext(lambda);
   if (extension != ".bat") {
-    std::cout << "Error: lambda script extension must be '.bat' on Windows"
+    std::cerr << "Error: lambda script extension must be '.bat' on Windows"
 	      << std::endl;
     return 1;
   }
@@ -693,7 +702,14 @@ int write_omni(std::string buf) {
   of << "# OMNI" << std::endl;  
   of << "name: " << buf << std::endl;
   std::string tags = read_tags(buf);
-  of << "tags: " << tags << std::endl;
+  if (!tags.empty()) {
+    of << "tags: " << tags << std::endl;
+  }
+  else {
+    of.close();
+    return -1;
+  }
+
 #ifdef USE_POCO
   Poco::Path path(buf);
   of << "path: " << path.makeAbsolute().toString() << std::endl;
@@ -710,6 +726,15 @@ int write_omni(std::string buf) {
 int set_blackhole(){
   
   std::cout << "checking IOWarp runtime...";
+#ifdef USE_HERMES
+  if(!HERMES_INIT()) {
+    std::cerr << std::endl
+	      << "Error: HERMES_INIT() failed."
+	      << std::endl;
+    return -1;
+  };
+#endif
+
   if (std::filesystem::exists(".blackhole") == true) {
      std::cout << "yes" << std::endl;
   }
