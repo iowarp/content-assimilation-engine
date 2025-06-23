@@ -65,7 +65,7 @@ endif()
 
 add_executable(wrp wrp.cc)
 
-target_link_libraries(wrp yaml-cpp::yaml-cpp)
+target_link_libraries(wrp yaml-cpp)
 
 if(HERMES)
   target_link_libraries(wrp hermes::hermes_core_client)
