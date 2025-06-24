@@ -1,0 +1,31 @@
+name: mac omni r
+
+on:
+  push:
+    branches: main
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: install
+        run: |
+          brew install poco yaml-cpp
+      - name: test
+        run: |
+          cd omni
+          mkdir build
+          cd build
+          cmake  -DSITE:STRING="mac" -DBUILDNAME="omni/r" ..
+          ctest -C Release -D Experimental
+          cd ../..
+      - name: poco
+        run: |
+          cd omni
+          mkdir poco
+          cd poco
+          cmake -DPOCO=ON -DSITE:STRING="mac" -DBUILDNAME="omni/r/poco" ..
+          ctest -C Release -D Experimental
+
