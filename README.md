@@ -6,10 +6,25 @@
 [![docker](https://github.com/iowarp/content-assimilation-engine/actions/workflows/docker.yml/badge.svg)](https://github.com/iowarp/content-assimilation-engine/actions/workflows/docker.yml) [![synology](https://github.com/iowarp/content-assimilation-engine/actions/workflows/synology.yml/badge.svg)](https://github.com/iowarp/content-assimilation-engine/actions/workflows/synology.yml)
 
 ```mermaid
-flowchart TD
- A[Data] -->|extract-transform-load|B[(IOWarp Lake)]
- B-->|stage-in| D[Hierarchical Memory]
- D-->|stage-out| B
+graph LR
+A[Data] -.->|CAE
+extract-transform-load|S
+
+subgraph C["Data Lake"]
+ S[(Content
+    Content
+    ...
+    Content
+  )]
+end
+
+subgraph B[Hierarchical Memory]
+  M[Content]
+end
+
+
+S-->|stage-in|M
+M-->|stage-out|S
 ```
 
 
