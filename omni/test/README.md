@@ -1,3 +1,3 @@
-# OMNI
+# OMNI Files & Lambda Scripts
 
-Parse the OMNI format file and send tasks to CAE backend.
+  This directory has OMNI files and Lambda scripts for testing `wrp`.

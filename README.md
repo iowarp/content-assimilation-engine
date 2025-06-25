@@ -2,7 +2,6 @@
 [![win omni r](https://github.com/iowarp/content-assimilation-engine/actions/workflows/win-omni-r.yml/badge.svg)](https://github.com/iowarp/content-assimilation-engine/actions/workflows/win-omni-r.yml)
 [![mac omni r](https://github.com/iowarp/content-assimilation-engine/actions/workflows/mac-omni-r.yml/badge.svg)](https://github.com/iowarp/content-assimilation-engine/actions/workflows/mac-omni-r.yml)
 [![ubu omni r](https://github.com/iowarp/content-assimilation-engine/actions/workflows/ubu-omni-r.yml/badge.svg)](https://github.com/iowarp/content-assimilation-engine/actions/workflows/ubu-omni-r.yml)
-
 [![docker](https://github.com/iowarp/content-assimilation-engine/actions/workflows/docker.yml/badge.svg)](https://github.com/iowarp/content-assimilation-engine/actions/workflows/docker.yml) [![synology](https://github.com/iowarp/content-assimilation-engine/actions/workflows/synology.yml/badge.svg)](https://github.com/iowarp/content-assimilation-engine/actions/workflows/synology.yml)
 
 ```mermaid
@@ -32,17 +31,16 @@ M-->|stage-out|S
 
 ## Conda
 
-Use `$ conda install iowarp::omni`.
+`$ conda install iowarp::omni`.
 
 ## Python
 
-Use `$ pip install -r requirements.txt`.
+`$ pip install -r requirements.txt`.
 
 ## vcpkg
 
 1. Install [dependencies](https://github.com/iowarp/iowarp-install?tab=readme-ov-file#vcpkg).
-2. Run 
-```$ cmake -DCMAKE_TOOLCHAIN_FILE=iowarp-install/vcpkg/scripts/buildsystems/vcpkg.cmake ..```
+2. `$ cmake -DCMAKE_TOOLCHAIN_FILE=iowarp-install/vcpkg/scripts/buildsystems/vcpkg.cmake ..`
 
 # Usage
 
