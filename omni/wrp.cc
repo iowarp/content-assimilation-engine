@@ -111,7 +111,9 @@ std::string sha256_file(const std::string& filePath) {
 #endif
 
 int write_meta(std::string name, std::string tags) {
-  std::filesystem::path file_path = ".blackhole/ls";
+
+  std::string file_path = ".blackhole/ls";
+
   std::ofstream outfile(file_path, std::ios::out | std::ios::app);
   if (outfile.is_open()) {
     outfile << name << "|";
@@ -979,6 +981,23 @@ int set_blackhole(){
   };
 #endif
 
+#ifdef USE_POCO
+  Poco::File dir(".blackhole");
+  if (dir.exists() == true) {
+     std::cout << "yes" << std::endl;
+  }
+  else {
+    std::cout << "no" << std::endl;
+    std::cout << "launching a new IOWarp runtime...";
+    if (dir.createDirectory()) {
+      std::cout << "done" << std::endl;
+      return 0;
+    } else {
+      std::cerr << "Error: failed to create .blackhole directory" << std::endl;
+      return -1;
+    }
+  }  
+#else
   if (std::filesystem::exists(".blackhole") == true) {
      std::cout << "yes" << std::endl;
   }
@@ -993,6 +1012,8 @@ int set_blackhole(){
       return -1;
     }
   }
+#endif  
+
   return 0;
 }
 

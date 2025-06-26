@@ -6,7 +6,10 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-13, macos-14, macos-15]
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -18,7 +21,7 @@ jobs:
           cd omni
           mkdir build
           cd build
-          cmake  -DSITE:STRING="mac" -DBUILDNAME="omni/r" ..
+          cmake -DSITE:STRING="${{ matrix.os }}" -DBUILDNAME="omni/r" ..
           ctest -C Release -D Experimental
           cd ../..
       - name: poco
@@ -26,6 +29,6 @@ jobs:
           cd omni
           mkdir poco
           cd poco
-          cmake -DPOCO=ON -DSITE:STRING="mac" -DBUILDNAME="omni/r/poco" ..
+          cmake -DPOCO=ON -DSITE:STRING="${{ matrix.os }}" -DBUILDNAME="omni/r/poco" ..
           ctest -C Release -D Experimental
 

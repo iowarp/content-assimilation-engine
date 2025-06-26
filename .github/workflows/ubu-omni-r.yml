@@ -6,7 +6,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-22.04]    
     steps:
     - name: checkout
       uses: actions/checkout@v4
@@ -19,7 +22,7 @@ jobs:
           cd omni
           mkdir build
           cd build
-          cmake  -DSITE:STRING="ubu" -DBUILDNAME="omni/r" ..
+          cmake  -DSITE:STRING="${{ matrix.os }}" -DBUILDNAME="omni/r" ..
           ctest -C Release -D Experimental
           cd ../..
     - name: poco
@@ -27,5 +30,5 @@ jobs:
           cd omni
           mkdir poco
           cd poco
-          cmake -DPOCO=ON  -DSITE:STRING="ubu" -DBUILDNAME="omni/r/poco" ..
+          cmake -DPOCO=ON  -DSITE:STRING="${{ matrix.os }}" -DBUILDNAME="omni/r/poco" ..
           ctest -C Release -D Experimental
