@@ -7,20 +7,23 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2022, windows-2025]        
     steps:
       - name: checkout
         uses: actions/checkout@v4
       - name: install
         run: |
-          vcpkg install poco[crypto] yaml-cpp
+          vcpkg install poco[crypto,netssl] yaml-cpp
           vcpkg integrate install
       - name: test
         run: |
           cd omni
           mkdir build
           cd build
-          cmake -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DSITE:STRING="win" -DBUILDNAME="omni/r" ..
+          cmake -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DSITE:STRING="${{ matrix.os }}" -DBUILDNAME="omni/r" ..
           ctest -C Release -D Experimental
           cd ../..
         shell: cmd
@@ -29,6 +32,6 @@ jobs:
           cd omni
           mkdir poco
           cd poco
-          cmake -DPOCO=ON -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DSITE:STRING="win" -DBUILDNAME="omni/r/poco" ..
+          cmake -DPOCO=ON -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DSITE:STRING="${{ matrix.os }}" -DBUILDNAME="omni/r/poco" ..
           ctest -C Release -D Experimental
         shell: cmd

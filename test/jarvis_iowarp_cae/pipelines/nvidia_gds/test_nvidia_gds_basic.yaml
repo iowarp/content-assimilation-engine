@@ -1,7 +1,0 @@
-name: hermes_unit_nvidia_gds_basic
-env: hermes
-pkgs:
-  - pkg_type: hermes_nvidia_gds_tests
-    pkg_name: hermes_nvidia_gds_tests
-    test_file: nvidia_gds_basic
-    hermes: false

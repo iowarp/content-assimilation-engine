@@ -1,0 +1,18 @@
+name: redi
+
+tags:
+  - h5
+  - NASA
+  - NSIDC
+  - ATL08
+  - github
+
+# Redirect  
+uri: https://github.com/hyoklee/kerchunk/raw/refs/heads/main/data/ATL08_20181014084920_02400109_003_01.h5
+
+# SHA256
+hash: 2f8cde944f1fea90c99f7b5f26045c811864e6199940c1d6d043062405637d19
+
+# bytes
+size: 700398
+

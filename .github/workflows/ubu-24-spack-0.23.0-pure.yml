@@ -3,7 +3,7 @@ name: ubuntu-24.04 spack-0.23.0 pure
 on:
   workflow_dispatch:
   push:
-    branches: main
+    branches: main-
 
 jobs:
   build:
@@ -13,7 +13,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y openssh-server
-        sudo ssh-keygen -A
+        sudo ssh-keygen -A # Ensures default host keys are generated
+
     - name: generate ssh key
       run: |
         mkdir -p ~/.ssh
@@ -23,6 +24,7 @@ jobs:
         chmod 600 ~/.ssh/authorized_keys
         sudo chown -R $USER:$USER ~/.ssh
         ls -la ~/.ssh/
+
     - name: start sshd
       run: |
         sudo mkdir -p /run/sshd
@@ -33,13 +35,14 @@ jobs:
         echo "Checking if sshd is listening on 127.0.0.1:22..."
         netstat -tuln | grep 22
         echo "SSHD should be running internally."
-    - name: test ssh
+
+    - name: Test SSH to Localhost (using generated key)
       run: |
         echo "Attempting to SSH to localhost:22..."
         ssh -vvv -i ~/.ssh/id_runner_local -p 22 runner@localhost \
           -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \
-          "echo 'SSH successful: Whoami is $(whoami) and pwd is $(pwd)' && ls -la"
+          "echo 'SSH successful: Whoami is $(whoami) and pwd is $(pwd)' && ls -la"      
     - name: checkout
       uses: actions/checkout@v4
     - name: checkout spack
@@ -101,7 +104,7 @@ jobs:
         jarvis env build hermes
         jarvis ppl index copy jarvis_hermes.hermes.test_hermes
         jarvis ppl load yaml test_hermes.yaml
-        jarvis pkg conf chimaera_run sleep=5
+        jarvis ppl env build
         jarvis ppl run
         mkdir -p ~/my_mod_repo/jarvis_example/jarvis_example
         mkdir -p ~/my_mod_repo/jarvis_example/pipelines
@@ -136,3 +139,15 @@ jobs:
         cd build
         cmake ..
         make
+    - name: test omni
+      run: |
+        scspkg create wrp
+        cd omni
+        mkdir build
+        cd build
+        cmake -DHERMES=ON -DCMAKE_INSTALL_PREFIX=$(scspkg pkg root wrp) ..
+        make
+        make install
+        module avail
+        module load  wrp
+        scspkg list

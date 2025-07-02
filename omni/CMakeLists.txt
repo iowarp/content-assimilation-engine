@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.22)
 project(OMNI)
 
 include(CTest)
@@ -6,8 +6,8 @@ enable_testing()
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(yaml-cpp)
-
+find_package(yaml-cpp REQUIRED)
+  
 include_directories(
         ${CMAKE_BINARY_DIR}
         ${CMAKE_SOURCE_DIR}
@@ -25,7 +25,7 @@ endif()
 option(POCO "Enable POCO support" OFF)
 if(POCO)
 add_definitions(-DUSE_POCO)
-find_package(Poco REQUIRED COMPONENTS Crypto Foundation)
+find_package(Poco REQUIRED COMPONENTS Crypto Foundation Net NetSSL)
 # find_package(OpenSSL REQUIRED COMPONENTS Crypto QUIET)
 endif()
 
@@ -65,7 +65,12 @@ endif()
 
 add_executable(wrp wrp.cc)
 
-target_link_libraries(wrp yaml-cpp)
+if(TARGET yaml-cpp::yaml-cpp)
+  target_link_libraries(wrp yaml-cpp::yaml-cpp)  
+else()
+  target_link_libraries(wrp yaml-cpp)
+endif()
+
 
 if(HERMES)
   target_link_libraries(wrp hermes::hermes_core_client)
@@ -78,15 +83,16 @@ endif()
 
 
 if(POCO)
-  target_link_libraries(wrp Poco::Crypto Poco::Foundation)
+  target_link_libraries(wrp Poco::Crypto Poco::Foundation Poco::Net Poco::NetSSL)
 endif()
 
-
+option(COV "Enable COVERAGE support" OFF)
+if(COV)
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   target_compile_options(wrp PRIVATE -coverage)
   target_link_options(wrp PRIVATE -coverage)
 endif()  
-
+endif()
 
 add_test(NAME put COMMAND wrp put ../test/posix.yml)
 
@@ -158,5 +164,18 @@ set_tests_properties(lseek
     WILL_FAIL "TRUE"
     RETURN_VALUE 1
 )
+
+if(POCO)
+add_test(NAME hash COMMAND wrp put ../test/hash.yml)
+set_tests_properties(hash
+    PROPERTIES
+    WILL_FAIL "TRUE"
+    RETURN_VALUE 1
+)
+
+add_test(NAME http COMMAND wrp put ../test/http.yml)
+add_test(NAME redi COMMAND wrp put ../test/redi.yml)
+add_test(NAME rget COMMAND wrp put ../test/rget.yml)
+endif()
 
 install(TARGETS wrp DESTINATION bin)

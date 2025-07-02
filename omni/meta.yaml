@@ -1,0 +1,51 @@
+package:
+  name: omni
+  version: 0.0.0
+
+source:
+  path: .
+#  git_url: https://github.com/iowarp/content-assimilation-engine
+#  git_depth: 1
+
+# build:
+#   number: 0
+#   run_exports:
+#    - {{ pin_subpackage("omni", max_pin="x.x.x") }}
+# build:
+#  script_env:
+#    - CMAKE_GEN=Visual Studio 17 2022
+#    - CMAKE_GENERATOR=Visual Studio 17 2022
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}  # MSVC compiler for Visual Studio 2022
+    - aws-sdk-cpp
+    - cmake >=3.28    
+    - numpy=1.26
+    - poco    
+    - yaml-cpp
+#    - pthreads-win32
+  host:
+    - aws-sdk-cpp
+    - numpy=1.26    
+    - poco
+#    - pthreads-win32
+    - yaml-cpp
+  run:
+    - aws-sdk-cpp
+    - poco
+    - yaml-cpp
+#    - pthreads-win32
+
+# files:
+#   - README.md
+#   - ./bin/*
+
+test:
+  commands:
+    - pip --help
+
+about:
+  home: https://grc.iit.edu/research/projects/iowarp/
+  license: BSD
+  summary: IOWarp OMNI Conda Package

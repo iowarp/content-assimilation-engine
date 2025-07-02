@@ -1,1 +1,0 @@
-These unit tests are used to validate the GDS/CUFile interceptor of Hermes.
