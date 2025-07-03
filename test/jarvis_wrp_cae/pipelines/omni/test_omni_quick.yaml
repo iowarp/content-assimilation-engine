@@ -1,0 +1,7 @@
+name: test_omni_quick
+env: cae
+pkgs:
+  - pkg_type: omni_parse
+    pkg_name: omni_parse
+    omni_yaml: ${PWD}/omni/config/quick_test.yaml
+    sleep: 1 
