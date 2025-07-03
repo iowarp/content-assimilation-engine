@@ -1,0 +1,17 @@
+# Ignore Python build directories
+__pycache__/
+build/
+dist/
+*.egg-info/
+
+# Ignore C++ build directories
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+Makefile
+*.o
+*.obj
+*.so
+*.a
+*.out
+*.exe

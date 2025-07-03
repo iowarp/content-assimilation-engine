@@ -1,0 +1,26 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 19,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "debug",
+            "hidden": false,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "/home/llogan/.scspkg/packages/cae",
+                "CAE_ENABLE_VFD": "ON",
+                "CAE_ENABLE_POSIX_ADAPTER": "ON",
+                "CAE_ENABLE_STDIO_ADAPTER": "ON",
+                "CAE_ENABLE_MPIIO_ADAPTER": "ON",
+                "CAE_OPENMPI": "ON",
+                "CAE_ENABLE_CMAKE_DOTENV": "ON"
+            }
+        }
+    ]
+}

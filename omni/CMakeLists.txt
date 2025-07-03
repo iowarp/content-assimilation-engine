@@ -50,9 +50,9 @@ message(STATUS "Margo_INCLUDE_DIRS: ${Margo_INCLUDE_DIRS}")
 include_directories(
         ${CMAKE_BINARY_DIR}
         ${CMAKE_SOURCE_DIR}
-        ${HERMES_SRC_DIR}
-        ${HERMES_ADAPTER_DIR}
-        ${HERMES_IO_CLIENT_DIR}
+        ${CAE_SRC_DIR}
+        ${CAE_ADAPTER_DIR}
+        ${CAE_IO_CLIENT_DIR}
         ${TDIR}
         ${Margo_INCLUDE_DIRS}
         ${CDIR}
