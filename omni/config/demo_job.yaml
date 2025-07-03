@@ -1,0 +1,32 @@
+# Demo OMNI job for CAE demonstration using real data files
+name: cae_demo_assimilation
+max_scale: 4  # Use up to 4 processes
+data:
+- path: ../data/A46_xx.csv  # Use existing CSV file (relative to build directory)
+  offset: 0
+  size: 10000  # First 10KB for demo
+  description:
+    - csv
+    - text  
+    - demo_data
+    - aerospace_data
+  hash: demo_csv_hash
+
+- path: ../data/A46_xx.arrow.parquet  # Use existing parquet file
+  offset: 0
+  size: 5000   # First 5KB for demo
+  description:
+    - parquet
+    - binary
+    - arrow_format
+    - aerospace_data
+
+- path: ../data/A46_xx.h5  # Use existing HDF5 file
+  offset: 1024
+  size: 8192   # 8KB starting from offset 1KB
+  description:
+    - hdf5
+    - binary
+    - scientific_data
+    - aerospace_data
+  hash: demo_h5_hash 

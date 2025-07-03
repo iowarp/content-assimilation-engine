@@ -55,10 +55,34 @@ install(TARGETS omni_lib
     ARCHIVE DESTINATION ${CAE_INSTALL_LIB_DIR}
 )
 
+# Install header files
 install(FILES 
     OMNI.h 
     OMNI_factory.h
     binary_file_omni.h
     filesystem_repo_omni.h
     DESTINATION ${CAE_INSTALL_INCLUDE_DIR}/omni
-) 
+)
+
+# Install configuration examples
+install(DIRECTORY config/
+    DESTINATION ${CAE_INSTALL_DATA_DIR}/omni/config
+    FILES_MATCHING PATTERN "*.yaml"
+)
+
+# Install documentation
+install(FILES README.md
+    DESTINATION ${CAE_INSTALL_DATA_DIR}/omni
+)
+
+# Configure and install configuration files
+configure_file(config/quick_test.yaml ${CMAKE_BINARY_DIR}/omni/config/quick_test.yaml COPYONLY)
+configure_file(config/demo_job.yaml ${CMAKE_BINARY_DIR}/omni/config/demo_job.yaml COPYONLY)
+configure_file(config/example_job.yaml ${CMAKE_BINARY_DIR}/omni/config/example_job.yaml COPYONLY)
+
+# Install test script with executable permissions
+install(PROGRAMS config/run_all_tests.sh
+        DESTINATION ${CMAKE_BINARY_DIR}/omni/config/
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                   GROUP_READ GROUP_EXECUTE
+                   WORLD_READ WORLD_EXECUTE) 

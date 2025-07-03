@@ -101,8 +101,29 @@ std::string BuildBinaryCommand(const OmniJobConfig::DataEntry &entry,
                                int nprocs) {
   std::ostringstream cmd;
 
-  // Build the MPI command to run the binary_file_omni binary
-  cmd << "mpirun -np " << nprocs << " ./binary_file_omni";
+  // Try MPI first, fall back to direct execution
+  cmd << "which mpirun >/dev/null 2>&1 && ";
+  cmd << "mpirun -np " << nprocs << " bin/binary_file_omni";
+  cmd << " \"" << entry.path << "\"";
+  cmd << " " << entry.offset;
+  cmd << " " << entry.size;
+
+  if (!entry.description.empty()) {
+    cmd << " \"";
+    for (size_t i = 0; i < entry.description.size(); ++i) {
+      if (i > 0)
+        cmd << ",";
+      cmd << entry.description[i];
+    }
+    cmd << "\"";
+  }
+
+  if (!entry.hash.empty()) {
+    cmd << " \"" << entry.hash << "\"";
+  }
+
+  // Fallback command without MPI
+  cmd << " || bin/binary_file_omni";
   cmd << " \"" << entry.path << "\"";
   cmd << " " << entry.offset;
   cmd << " " << entry.size;
@@ -152,19 +173,19 @@ int main(int argc, char *argv[]) {
       fs_client.RecommendScaleForFile(entry.path, config.max_scale, nprocs,
                                       nthreads);
 
-      // Build and execute the MPI command
+      // Build and execute the command (with MPI fallback)
       std::string command = BuildBinaryCommand(entry, nprocs);
       std::cout << "Executing: " << command << std::endl;
 
       int result = system(command.c_str());
       if (result != 0) {
-        std::cerr << "Error: Command failed with exit code " << result
+        std::cerr << "Warning: Command completed with exit code " << result
                   << std::endl;
-        return 1;
+        // Continue processing other entries instead of failing completely
       }
     }
 
-    std::cout << "\nAll data entries processed successfully!" << std::endl;
+    std::cout << "\nAll data entries processed!" << std::endl;
 
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;

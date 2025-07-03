@@ -1,0 +1,20 @@
+# Demo OMNI job for CAE demonstration
+name: cae_demo_assimilation
+max_scale: 2  # Use up to 2 processes
+data:
+- path: ../data/A46_xx.csv  # Use existing CSV file
+  offset: 0
+  size: 1000  # First 1KB for demo
+  description:
+    - csv
+    - text  
+    - demo_data
+  hash: demo_csv_hash
+
+- path: ../data/A46_xx.arrow.parquet  # Use existing parquet file
+  offset: 100
+  size: 500   # 500 bytes starting from offset 100
+  description:
+    - parquet
+    - binary
+    - demo_format 

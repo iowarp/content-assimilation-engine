@@ -14,9 +14,9 @@ struct FormatContext {
   std::string filename_;
   size_t offset_;
   size_t size_;
-  size_t hash_;
+  std::string hash_;
 
-  FormatContext() : offset_(0), size_(0), hash_(0) {}
+  FormatContext() : offset_(0), size_(0) {}
 };
 
 /**

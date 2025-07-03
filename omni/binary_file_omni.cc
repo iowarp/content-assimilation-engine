@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
     fctx.description_ = argv[4];
   }
   if (argc > 5) {
-    fctx.hash_ = std::stoull(argv[5]);
+    fctx.hash_ = argv[5]; // Store as string, not parse as number
   }
 
   // Divide the work among MPI processes
@@ -105,6 +105,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Processing file: " << fctx.filename_ << std::endl;
     std::cout << "Total size: " << total_size << " bytes" << std::endl;
     std::cout << "Number of processes: " << nprocs << std::endl;
+    if (!fctx.hash_.empty()) {
+      std::cout << "Expected hash: " << fctx.hash_ << std::endl;
+    }
   }
 
   // Get the format client and process the data

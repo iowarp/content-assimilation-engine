@@ -1,0 +1,11 @@
+# Quick test OMNI job for validation
+name: quick_test
+max_scale: 2  # Use up to 2 processes
+data:
+- path: ../data/A46_xx.csv  # Use existing CSV file (relative to build directory)
+  offset: 0
+  size: 1000  # Just 1KB for quick test
+  description:
+    - csv
+    - test
+  hash: quick_test_hash 
