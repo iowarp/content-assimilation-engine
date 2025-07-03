@@ -6,9 +6,9 @@ from jarvis_cd.basic.pkg import Application
 from jarvis_util import *
 
 
-class HermesPosixTests(Application):
+class CaePosixTests(Application):
     """
-    This class provides methods to launch the HermesPosixTests application.
+    This class provides methods to launch the CAE POSIX tests application.
     """
     def _init(self):
         """

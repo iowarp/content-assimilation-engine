@@ -6,9 +6,9 @@ from jarvis_cd.basic.pkg import Application
 from jarvis_util import *
 
 
-class HermesStdioTests(Application):
+class CaeStdioTests(Application):
     """
-    This class provides methods to launch the HermesStdioTests application.
+    This class provides methods to launch the CAE STDIO tests application.
     """
     def _init(self):
         """

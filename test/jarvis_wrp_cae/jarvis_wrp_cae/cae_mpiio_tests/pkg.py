@@ -6,9 +6,9 @@ from jarvis_cd.basic.pkg import Application
 from jarvis_util import *
 
 
-class HermesMpiioTests(Application):
+class CaeMpiioTests(Application):
     """
-    This class provides methods to launch the HermesMpiioTests application.
+    This class provides methods to launch the CAE MPI-IO tests application.
     """
     def _init(self):
         """

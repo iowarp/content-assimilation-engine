@@ -7,9 +7,9 @@ from jarvis_cd.basic.pkg import Interceptor
 from jarvis_util import *
 
 
-class HermesApi(Interceptor):
+class CaeAdapter(Interceptor):
     """
-    This class provides methods to inject the HermesMpiio interceptor.
+    This class provides methods to inject the CAE adapter interceptor.
     """
     def _init(self):
         """

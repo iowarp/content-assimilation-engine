@@ -6,9 +6,9 @@ from jarvis_cd.basic.pkg import Application
 from jarvis_util import *
 
 
-class HermesApiBench(Application):
+class CaeAdapterBench(Application):
     """
-    This class provides methods to launch the HermesApiBench application.
+    This class provides methods to launch the CAE adapter bench application.
     """
     def _init(self):
         """

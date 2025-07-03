@@ -6,9 +6,9 @@ from jarvis_cd.basic.pkg import Application
 from jarvis_util import *
 
 
-class HermesVfdTests(Application):
+class CaeVfdTests(Application):
     """
-    This class provides methods to launch the HermesVfdTests application.
+    This class provides methods to launch the CAE VFD tests application.
     """
     def _init(self):
         """

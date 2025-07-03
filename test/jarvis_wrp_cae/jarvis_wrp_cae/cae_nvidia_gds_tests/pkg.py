@@ -6,9 +6,9 @@ from jarvis_cd.basic.pkg import Application
 from jarvis_util import *
 
 
-class HermesNvidiaGdsTests(Application):
+class CaeNvidiaGdsTests(Application):
     """
-    This class provides methods to launch the HermesGDSTests application.
+    This class provides methods to launch the CAE NVIDIA GDS tests application.
     """
     def _init(self):
         """
