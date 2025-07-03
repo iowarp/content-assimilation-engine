@@ -1,0 +1,29 @@
+# Sample OMNI format in YAML
+name: cae posix job
+max_scale: 100  # Max num processes
+data:
+- path: /path/to/file.txt  # Path to the file (required)
+  range: [0, 1024]  # range of file we want to assimilate (optional)
+  offset: 0  # Offset we want to begin assimilating (optional)
+  size: 1024  # Total size of data we want to assimilate starting from offset (optional)
+  description:  # Description of the data (optional)
+    - text
+    - unstructured
+  hash: sha256_hash_value_here # Integrity information (optional)
+
+- path: /path/to/another/file.dat
+  offset: 1024
+  size: 2048
+  description:
+    - binary
+    - structured
+    - experimental_data
+
+- path: /path/to/large/dataset.bin
+  offset: 0
+  size: 134217728  # 128MB file
+  description:
+    - binary
+    - large_dataset
+    - scientific_data
+  hash: another_sha256_hash_here 

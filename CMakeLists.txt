@@ -218,6 +218,7 @@ include_directories(${CMAKE_SOURCE_DIR}/test/unit)
 
 set(TEST_MAIN ${CMAKE_SOURCE_DIR}/test/unit)
 add_subdirectory(adapters)
+add_subdirectory(omni)
 
 add_custom_target(lint COMMAND bash ${CMAKE_SOURCE_DIR}/ci/lint.sh ${CMAKE_SOURCE_DIR})
 
