@@ -9,10 +9,12 @@ endif()
 
 # Check for yaml-cpp
 find_package(yaml-cpp REQUIRED)
-
-if(NOT yaml-cpp_FOUND)
-    message(WARNING "yaml-cpp not found, OMNI module will not be built")
-    return()
+if (${YAML_CPP_LIBRARIES})
+    set(YAML_CPP_LIBS ${YAML_CPP_LIBRARIES})
+elseif(TARGET yaml-cpp::yaml-cpp)
+        set(YAML_CPP_LIBS yaml-cpp::yaml-cpp)
+else()
+  set(YAML_CPP_LIBS yaml-cpp)
 endif()
 
 message(STATUS "Building OMNI module with yaml-cpp")
@@ -28,7 +30,7 @@ set(OMNI_FACTORY_SOURCES
 
 # Create a static library for OMNI components
 add_library(omni_lib STATIC ${OMNI_FACTORY_SOURCES})
-target_link_libraries(omni_lib MPI::MPI_CXX yaml-cpp)
+target_link_libraries(omni_lib MPI::MPI_CXX ${YAML_CPP_LIBS})
 target_include_directories(omni_lib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Binary file OMNI processor (MPI binary)
@@ -38,7 +40,7 @@ target_include_directories(binary_file_omni PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Main YAML parser (wrp binary)
 add_executable(wrp wrp.cc)
-target_link_libraries(wrp omni_lib MPI::MPI_CXX yaml-cpp)
+target_link_libraries(wrp omni_lib MPI::MPI_CXX ${YAML_CPP_LIBS})
 target_include_directories(wrp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Set output directory for binaries to match the main project

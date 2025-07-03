@@ -12,8 +12,8 @@ pkgs:
   # Add hermes to the runtime
   - pkg_type: hermes_run
     pkg_name: hermes_run
-  # Intercept client I/O calls
-    - pkg_type: cae_adapter
+  #Intercept client I/O calls
+  - pkg_type: cae_adapter
     pkg_name: cae_adapter
     mpi: true
   # Launch IOR
