@@ -7,13 +7,13 @@ add_cuda_executable(gds_adapter_basic_test TRUE
         gds_adapter_basic_test.cc)
 target_link_libraries(gds_adapter_basic_test
         PUBLIC hshm::cudacxx cufile) # hermes added
-jarvis_test(gds test_nvidia_gds_basic)
+jarvis_test(nvidia_gds test_wrp_cae_nvidia_gds_basic)
 
 add_cuda_executable(gds_adapter_simple_test TRUE
         gds_adapter_simple_test.cc)
 target_link_libraries(gds_adapter_simple_test
         PUBLIC hshm::cudacxx cufile) # hermes added
-jarvis_test(gds test_nvidia_gds_simple)
+jarvis_test(nvidia_gds test_wrp_cae_hermes_nvidia_gds)
 
 SET(NVIDIA_GDS_TESTS
         gds_adapter_basic_test

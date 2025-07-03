@@ -21,8 +21,10 @@ target_link_libraries(hermes_vfd_adapter_test
         stdc++fs
         ${HDF5_CAE_VFD_EXT_LIB_DEPENDENCIES})
 
-jarvis_test(vfd test_hermes_vfd_basic)
-jarvis_test(vfd test_hermes_vfd_scratch)
+jarvis_test(vfd test_wrp_cae_hermes_vfd_basic)
+jarvis_test(vfd test_wrp_cae_hermes_vfd_scratch)
+jarvis_test(vfd test_wrp_cae_hermes_vfd_python)
+jarvis_test(vfd test_wrp_cae_vfd_python)
 
 install(
         TARGETS

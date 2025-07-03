@@ -14,7 +14,7 @@ target_link_libraries(hermes_stdio_adapter_mapper_test
   hermes_stdio)
 target_compile_definitions(hermes_stdio_adapter_mapper_test PUBLIC
   HERMES_INTERCEPT=1 HERMES_MPI_TESTS=false)
-jarvis_test(stdio test_hermes_stdio_mapper)
+jarvis_test(stdio test_wrp_cae_hermes_stdio_mapper)
 
 # ------------------------------------------------------------------------------
 # STDIO Adapter End to End tests
@@ -29,7 +29,7 @@ target_link_libraries(stdio_adapter_test
   hermes::hermes_core_client)
 target_compile_definitions(stdio_adapter_test PUBLIC
   HERMES_MPI_TESTS=false)
-jarvis_test(stdio test_stdio_basic)
+jarvis_test(stdio test_wrp_cae_stdio_basic)
 
 # Hermes, None-MPI STDIO basic
 add_executable(hermes_stdio_adapter_test
@@ -42,8 +42,8 @@ target_link_libraries(hermes_stdio_adapter_test
   hermes_stdio)
 target_compile_definitions(hermes_stdio_adapter_test PUBLIC
   HERMES_INTERCEPT=1 HERMES_MPI_TESTS=false)
-jarvis_test(stdio test_hermes_stdio_basic_small)
-jarvis_test(stdio test_hermes_stdio_basic_large)
+jarvis_test(stdio test_wrp_cae_hermes_stdio_basic_small)
+jarvis_test(stdio test_wrp_cae_hermes_stdio_basic_large)
 
 # Non-Hermes, MPI STDIO basic
 add_executable(stdio_adapter_mpi_test
@@ -55,7 +55,7 @@ target_link_libraries(stdio_adapter_mpi_test
   hermes::hermes_core_client)
 target_compile_definitions(stdio_adapter_mpi_test PUBLIC
   HERMES_MPI_TESTS=true)
-jarvis_test(stdio test_stdio_basic_mpi)
+jarvis_test(stdio test_wrp_cae_stdio_basic_mpi)
 
 # Hermes, MPI STDIO basic
 add_executable(hermes_stdio_adapter_mpi_test
@@ -69,8 +69,8 @@ add_dependencies(hermes_stdio_adapter_mpi_test
   hermes_stdio)
 target_compile_definitions(hermes_stdio_adapter_mpi_test PUBLIC
   HERMES_INTERCEPT=1 HERMES_MPI_TESTS=true)
-jarvis_test(stdio test_hermes_stdio_basic_mpi_small)
-jarvis_test(stdio test_hermes_stdio_basic_mpi_large)
+jarvis_test(stdio test_wrp_cae_hermes_stdio_basic_mpi_small)
+jarvis_test(stdio test_wrp_cae_hermes_stdio_basic_mpi_large)
 
 # Hermes, Low buffer space
 add_executable(hermes_stdio_low_buf_adapter_test
@@ -80,7 +80,7 @@ target_link_libraries(hermes_stdio_low_buf_adapter_test hermes_stdio)
 add_dependencies(hermes_stdio_low_buf_adapter_test hermes_stdio)
 target_compile_definitions(hermes_stdio_low_buf_adapter_test PUBLIC
   HERMES_INTERCEPT=1 HERMES_MPI_TESTS=false)
-jarvis_test(stdio test_hermes_stdio_low_buf)
+jarvis_test(stdio test_wrp_cae_hermes_stdio_low_buf)
 
 # Hermes, Adapter mode
 add_executable(hermes_stdio_adapter_mode_test
@@ -92,9 +92,9 @@ add_dependencies(hermes_stdio_adapter_mode_test
   hermes_stdio)
 target_compile_definitions(hermes_stdio_adapter_mode_test PUBLIC
   HERMES_INTERCEPT=1 HERMES_MPI_TESTS=false)
-jarvis_test(stdio test_hermes_stdio_adapter_bypass)
-jarvis_test(stdio test_hermes_stdio_adapter_default)
-jarvis_test(stdio test_hermes_stdio_adapter_scratch)
+jarvis_test(stdio test_wrp_cae_hermes_stdio_adapter_bypass)
+jarvis_test(stdio test_wrp_cae_hermes_stdio_adapter_default)
+jarvis_test(stdio test_wrp_cae_hermes_stdio_adapter_scratch)
 
 set(STDIO_TESTS
   stdio_adapter_test
