@@ -48,7 +48,7 @@ jarvis ppl append omni_parse omni_yaml=/path/to/job.yaml cwd=/custom/working/dir
 
 ```yaml
 name: omni_demo
-env: cae_env
+env: hermes
 pkgs:
   - pkg_type: omni_parse
     pkg_name: omni_parse
@@ -61,7 +61,7 @@ pkgs:
 ```yaml
 config:
   name: omni_scaling_test
-  env: cae_env
+  env: hermes
   pkgs:
     - pkg_type: omni_parse
       pkg_name: omni_parse
@@ -82,7 +82,7 @@ The `omni_parse` package uses `mod_env` for environment variables, making it com
 
 ```yaml
 name: omni_with_interception
-env: cae_env
+env: hermes
 pkgs:
   - pkg_type: cae_adapter
     pkg_name: cae_adapter

@@ -357,6 +357,45 @@ This script will:
 - **demo_job.yaml**: ~3 seconds execution time (3 files)
 - **Actual performance** depends on storage speed and system load
 
+## Jarvis Integration
+
+OMNI includes a Jarvis package (`omni_parse`) for seamless integration with the Jarvis workflow management system. This allows you to:
+
+- Execute OMNI jobs through Jarvis pipeline management
+- Integrate with CAE interceptors for I/O interception
+- Run automated test suites and experiments
+- Manage complex multi-stage workflows
+
+### Quick Jarvis Setup
+
+```bash
+# Create and run a simple OMNI pipeline
+jarvis ppl create test_omni
+jarvis ppl append omni_parse omni_yaml=${PWD}/omni/config/quick_test.yaml
+jarvis ppl run
+```
+
+### With CAE Adapter Integration
+
+```bash
+# Run OMNI with POSIX interception
+jarvis ppl create test_omni_posix
+jarvis ppl append cae_adapter +posix
+jarvis ppl append omni_parse omni_yaml=${PWD}/omni/config/demo_job.yaml
+jarvis ppl run
+```
+
+### Available Pipeline Examples
+
+The package includes several pre-configured pipeline examples in `test/jarvis_wrp_cae/pipelines/omni/`:
+
+- `test_omni_quick.yaml`: Basic validation pipeline
+- `test_omni_demo.yaml`: Multi-file demonstration pipeline  
+- `test_omni_scaling.yaml`: Multi-configuration test suite
+- `test_omni_with_posix_adapter.yaml`: Integration with I/O interception
+
+For detailed Jarvis integration documentation, see `test/jarvis_wrp_cae/jarvis_wrp_cae/omni_parse/README.md`.
+
 ## Example Configurations
 
 The `config/` directory contains several example configurations:

@@ -1,7 +1,7 @@
-name: test_omni_quick
+name: test_omni_demo
 env: hermes
 pkgs:
   - pkg_type: omni_parse
     pkg_name: omni_parse
-    omni_yaml: ${PWD}/omni/config/quick_test.yaml
+    omni_yaml: ${PWD}/omni/config/demo_job.yaml
     sleep: 1 

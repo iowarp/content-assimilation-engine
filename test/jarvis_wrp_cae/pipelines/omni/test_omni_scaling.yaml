@@ -1,0 +1,16 @@
+config:
+  name: test_omni_scaling
+  env: hermes
+  pkgs:
+    - pkg_type: omni_parse
+      pkg_name: omni_parse
+      omni_yaml: ${PWD}/omni/config/quick_test.yaml
+      sleep: 1
+vars:
+  omni_parse.omni_yaml: 
+    - ${PWD}/omni/config/quick_test.yaml
+    - ${PWD}/omni/config/demo_job.yaml
+loop:
+  - [omni_parse.omni_yaml]
+repeat: 1
+output: "${SHARED_DIR}/omni_scaling_results" 
