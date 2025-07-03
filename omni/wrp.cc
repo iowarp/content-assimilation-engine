@@ -79,6 +79,29 @@ OmniJobConfig ParseOmniFile(const std::string &yaml_file) {
           data_entry.hash = entry["hash"].as<std::string>();
         }
 
+        // If size is not specified (0), automatically detect file size
+        if (data_entry.size == 0 && !data_entry.path.empty()) {
+          FilesystemRepoClient fs_client;
+          size_t file_size = fs_client.GetFileSize(data_entry.path);
+          if (file_size > 0) {
+            // Calculate size as file_size - offset to read from offset to end
+            // of file
+            if (data_entry.offset < file_size) {
+              data_entry.size = file_size - data_entry.offset;
+              std::cout << "Auto-detected size for " << data_entry.path << ": "
+                        << data_entry.size << " bytes (from offset "
+                        << data_entry.offset << " to end of file)" << std::endl;
+            } else {
+              std::cerr << "Warning: Offset " << data_entry.offset
+                        << " is beyond file size " << file_size << " for "
+                        << data_entry.path << std::endl;
+            }
+          } else {
+            std::cerr << "Warning: Could not determine file size for "
+                      << data_entry.path << std::endl;
+          }
+        }
+
         // Derive range from offset and size if range is not specified
         if (data_entry.range.empty() && data_entry.size > 0) {
           data_entry.range.push_back(data_entry.offset);

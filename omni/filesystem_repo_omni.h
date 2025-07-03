@@ -30,7 +30,6 @@ public:
    */
   void Download(const RepoContext &ctx) override;
 
-private:
   /**
    * Get file size for the given path
    * @param path File path
@@ -38,7 +37,6 @@ private:
    */
   size_t GetFileSize(const std::string &path);
 
-public:
   /**
    * Recommend scale specifically for a file path
    * @param file_path Path to the file
