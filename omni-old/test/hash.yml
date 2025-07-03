@@ -1,0 +1,7 @@
+name: hash
+
+path: "../../data/A46_xx.csv"
+
+# Wrong SHA256
+hash: 45435acaba54ccfa9141bd5ddd803b939d4e45d352fcfa7074a7418307567215
+

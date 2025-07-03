@@ -97,12 +97,12 @@ jobs:
         jarvis rg build
         export CTE_PATH=`spack find --paths iowarp-cte | grep iowarp | cut -d' ' -f3`
         echo $CTE_PATH
-        jarvis repo add $CTE_PATH/jarvis/jarvis_hermes
+        jarvis repo add $CTE_PATH/jarvis/jarvis_wrp_cae
         export CRE_PATH=`spack find --paths iowarp-runtime | grep iowarp | cut -d' ' -f3`
         echo $CRE_PATH
         jarvis repo add $CRE_PATH/jarvis/jarvis_chimaera
         jarvis env build hermes
-        jarvis ppl index copy jarvis_hermes.hermes.test_hermes
+        jarvis ppl index copy jarvis_wrp_cae.cae.test_cae
         jarvis ppl load yaml test_hermes.yaml
         jarvis ppl env build
         jarvis ppl run

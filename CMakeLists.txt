@@ -234,12 +234,13 @@ endfunction()
 
 function(jarvis_test test_type test_name)
     add_test(NAME ${test_name}
-        COMMAND jarvis pipeline run yaml "${CMAKE_SOURCE_DIR}/test/jarvis_hermes/pipelines/${test_type}/${test_name}.yaml")
+        COMMAND jarvis pipeline run yaml "${CMAKE_SOURCE_DIR}/test/jarvis_wrp_cae/pipelines/${test_type}/${test_name}.yaml")
 endfunction()
 
 enable_testing()
+add_subdirectory(test/unit)
 
-install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
+# install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-# jarvis_repo_add("${CMAKE_SOURCE_DIR}/test/jarvis_cae" "${CMAKE_SOURCE_DIR}/test/jarvis_cae/pipelines")
+jarvis_repo_add("${CMAKE_SOURCE_DIR}/test/jarvis_wrp_cae" "${CMAKE_SOURCE_DIR}/test/jarvis_wrp_cae/pipelines")
 

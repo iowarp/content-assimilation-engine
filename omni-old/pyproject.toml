@@ -1,0 +1,37 @@
+[project]
+name = "omni"
+description = "IOWarp OMNI"
+readme = "README.md"
+requires-python = ">=3.7"
+dynamic = ["version"]
+authors = [
+  {name = "H. Joe Lee", email = "hyoklee@hdfgroup.org"},
+]
+classifiers = [
+  "Operating System :: OS Independent",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python",
+  "Topic :: Scientific/Engineering",
+  "Development Status :: 3 - Alpha",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = [
+  "poco",
+  "yaml-cpp"
+]
+
+[project.urls]
+Documentation = "https://iowarp.github.io/"
+issue-tracker = "https://github.com/iowarp/content-assimilation-engine/issues"
+source-code = "https://github.com/iowarp/content-assimilation-engine"
+
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools>=42",
+  "setuptools-scm>=7",
+]
+
+[tool.setuptools]
+packages = ["omni", "omni.basic", "omni.template"]
+include-package-data = true

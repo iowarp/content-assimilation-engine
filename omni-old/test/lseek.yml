@@ -1,0 +1,22 @@
+# Sample OMNI format in YAML
+name: cae posix job
+
+tags:
+  - ai
+  - material sicence
+  - utah
+
+path: "../test/lseek.csv"
+
+# SHA256
+hash: a4580e7e8b49255a3e10599c5222a021bdc9efec6b36c2e6c99f9f05b6dc63f3
+
+# bytes
+size: 106922
+
+# lseek()
+offset: 38
+
+# pread, read()
+nbyte: 30
+

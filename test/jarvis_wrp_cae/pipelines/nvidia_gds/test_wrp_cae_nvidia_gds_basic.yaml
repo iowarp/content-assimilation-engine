@@ -1,0 +1,7 @@
+name: test_wrp_cae_nvidia_gds_basic
+env: hermes
+pkgs:
+  - pkg_type: cae_nvidia_gds_tests
+    pkg_name: cae_nvidia_gds_tests
+    test_file: nvidia_gds_basic
+    hermes: false

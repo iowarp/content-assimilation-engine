@@ -1,0 +1,21 @@
+name: test_wrp_cae_hermes_vfd_python
+env: hermes
+pkgs:
+  - pkg_type: chimaera_run
+    pkg_name: chimaera_run
+    sleep: 5
+    do_dbg: false
+    dbg_port: 4000
+    modules: ['hermes_hermes_core']
+  - pkg_type: hermes_run
+    pkg_name: hermes_run
+    - pkg_type: cae_adapter
+    pkg_name: cae_adapter
+    vfd: true
+  - pkg_type: cae_vfd_tests
+    pkg_name: cae_vfd_tests
+    test_file: vfd_py_test
+    hermes: true
+    mode: default
+    dbg_port: 4001
+    do_dbg: false

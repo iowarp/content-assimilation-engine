@@ -1,0 +1,7 @@
+# A map with nested maps
+address:
+  street: "123 Main St"
+  city: "Anytown"
+  state: "CA"
+  zip: "90210"
+
