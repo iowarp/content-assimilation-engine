@@ -41,7 +41,7 @@ extern "C" {
 // static __attribute__((constructor(101))) void init_posix(void) {
 //   CAE_POSIX_API;
 //   CAE_POSIX_FS;
-//   TRANSPARENT_HERMES();;
+//   cae::IOWARP_CAE_INIT();;
 // }
 
 /**
@@ -60,7 +60,7 @@ int CAE_DECL(open)(const char *path, int flags, ...) {
     va_end(arg);
   }
   if (real_api->IsInterceptorLoaded()) {
-    TRANSPARENT_HERMES();
+    cae::IOWARP_CAE_INIT();
   }
   if (real_api->IsInterceptorLoaded() && fs_api->IsPathTracked(path)) {
     HILOG(kDebug,
@@ -95,7 +95,7 @@ int CAE_DECL(open64)(const char *path, int flags, ...) {
     va_end(arg);
   }
   if (real_api->IsInterceptorLoaded()) {
-    TRANSPARENT_HERMES();
+    cae::IOWARP_CAE_INIT();
   }
   if (real_api->IsInterceptorLoaded() && fs_api->IsPathTracked(path)) {
     HILOG(kDebug,
@@ -121,7 +121,7 @@ int CAE_DECL(__open_2)(const char *path, int oflag) {
   auto real_api = CAE_POSIX_API;
   auto fs_api = CAE_POSIX_FS;
   if (real_api->IsInterceptorLoaded()) {
-    TRANSPARENT_HERMES();
+    cae::IOWARP_CAE_INIT();
   }
   if (real_api->IsInterceptorLoaded() && fs_api->IsPathTracked(path)) {
     HILOG(kDebug,
@@ -142,7 +142,7 @@ int CAE_DECL(creat)(const char *path, mode_t mode) {
   auto real_api = CAE_POSIX_API;
   auto fs_api = CAE_POSIX_FS;
   if (real_api->IsInterceptorLoaded()) {
-    TRANSPARENT_HERMES();
+    cae::IOWARP_CAE_INIT();
   }
   if (real_api->IsInterceptorLoaded() && fs_api->IsPathTracked(path)) {
     HILOG(kDebug,
@@ -163,7 +163,7 @@ int CAE_DECL(creat64)(const char *path, mode_t mode) {
   auto real_api = CAE_POSIX_API;
   auto fs_api = CAE_POSIX_FS;
   if (real_api->IsInterceptorLoaded()) {
-    TRANSPARENT_HERMES();
+    cae::IOWARP_CAE_INIT();
   }
   if (real_api->IsInterceptorLoaded() && fs_api->IsPathTracked(path)) {
     HILOG(kDebug,

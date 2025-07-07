@@ -42,21 +42,20 @@ public:
   /** Get the current adapter mode */
   AdapterMode GetBaseAdapterMode() {
     hshm::ScopedRwReadLock md_lock(lock_, 1);
-    return static_cast<cae::AdapterMode>(
-        HERMES_CLIENT_CONF.GetBaseAdapterMode());
+    return static_cast<cae::AdapterMode>(IOWARP_CAE_CONF->GetBaseAdapterMode());
   }
 
   /** Get the adapter mode for a particular file */
   AdapterMode GetAdapterMode(const std::string &path) {
     hshm::ScopedRwReadLock md_lock(lock_, 2);
     return static_cast<cae::AdapterMode>(
-        HERMES_CLIENT_CONF.GetAdapterConfig(path).mode_);
+        IOWARP_CAE_CONF->GetAdapterConfig(path).mode_);
   }
 
   /** Get the adapter page size for a particular file */
   size_t GetAdapterPageSize(const std::string &path) {
     hshm::ScopedRwReadLock md_lock(lock_, 3);
-    return HERMES_CLIENT_CONF.GetAdapterConfig(path).page_size_;
+    return IOWARP_CAE_CONF->GetAdapterConfig(path).page_size_;
   }
 
   /**

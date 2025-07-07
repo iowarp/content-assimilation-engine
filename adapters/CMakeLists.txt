@@ -1,8 +1,12 @@
 #------------------------------------------------------------------------------
 # Build adapters
 #------------------------------------------------------------------------------
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(config)
 add_subdirectory(filesystem)
-add_subdirectory(posix)
+if (CAE_ENABLE_POSIX_ADAPTER)
+    add_subdirectory(posix)
+endif()
 if (CAE_ENABLE_STDIO_ADAPTER)
     add_subdirectory(stdio)
 endif()

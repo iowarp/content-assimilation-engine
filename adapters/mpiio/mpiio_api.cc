@@ -44,7 +44,7 @@ extern "C" {
  */
 int MPI_Init(int *argc, char ***argv) {
   HILOG(kDebug, "MPI Init intercepted.");
-  TRANSPARENT_HERMES();
+  cae::IOWARP_CAE_INIT();
   auto real_api = CAE_MPIIO_API;
   return real_api->MPI_Init(argc, argv);
 }

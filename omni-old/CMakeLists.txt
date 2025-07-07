@@ -73,7 +73,7 @@ endif()
 
 
 if(HERMES)
-  target_link_libraries(wrp hermes::hermes_core_client)
+  target_link_libraries(wrp cae_config)
 endif()
 
 if(AWS)

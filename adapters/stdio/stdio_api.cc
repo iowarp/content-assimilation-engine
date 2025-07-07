@@ -39,7 +39,7 @@ extern "C" {
  */
 
 FILE *fopen(const char *path, const char *mode) {
-  TRANSPARENT_HERMES();
+  cae::IOWARP_CAE_INIT();
   auto real_api = CAE_STDIO_API;
   auto fs_api = CAE_STDIO_FS;
   if (fs_api->IsPathTracked(path)) {
@@ -53,7 +53,7 @@ FILE *fopen(const char *path, const char *mode) {
 }
 
 FILE *CAE_DECL(fopen64)(const char *path, const char *mode) {
-  TRANSPARENT_HERMES();
+  cae::IOWARP_CAE_INIT();
   auto real_api = CAE_STDIO_API;
   auto fs_api = CAE_STDIO_FS;
   if (fs_api->IsPathTracked(path)) {
@@ -67,7 +67,7 @@ FILE *CAE_DECL(fopen64)(const char *path, const char *mode) {
 }
 
 FILE *CAE_DECL(fdopen)(int fd, const char *mode) {
-  TRANSPARENT_HERMES();
+  cae::IOWARP_CAE_INIT();
   auto real_api = CAE_STDIO_API;
   auto fs_api = CAE_STDIO_FS;
   std::shared_ptr<AdapterStat> stat;
@@ -80,7 +80,7 @@ FILE *CAE_DECL(fdopen)(int fd, const char *mode) {
 }
 
 FILE *CAE_DECL(freopen)(const char *path, const char *mode, FILE *stream) {
-  TRANSPARENT_HERMES();
+  cae::IOWARP_CAE_INIT();
   auto real_api = CAE_STDIO_API;
   auto fs_api = CAE_STDIO_FS;
   if (fs_api->IsFpTracked(stream)) {
@@ -91,7 +91,7 @@ FILE *CAE_DECL(freopen)(const char *path, const char *mode, FILE *stream) {
 }
 
 FILE *CAE_DECL(freopen64)(const char *path, const char *mode, FILE *stream) {
-  TRANSPARENT_HERMES();
+  cae::IOWARP_CAE_INIT();
   auto real_api = CAE_STDIO_API;
   auto fs_api = CAE_STDIO_FS;
   if (fs_api->IsFpTracked(stream)) {

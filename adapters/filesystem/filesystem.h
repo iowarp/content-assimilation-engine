@@ -27,6 +27,7 @@
 
 #include "adapters/adapter_types.h"
 #include "adapters/mapper/mapper_factory.h"
+#include "config/config_manager.h"
 #include "filesystem_io_client.h"
 #include "filesystem_mdm.h"
 #include "hermes/bucket.h"
@@ -408,7 +409,7 @@ public:
 
   /** sync */
   int Sync(File &f, AdapterStat &stat) {
-    if (HERMES_CLIENT_CONF.flushing_mode_ == hermes::FlushingMode::kSync) {
+    if (IOWARP_CAE_CONF->flushing_mode_ == cae::FlushingMode::kSync) {
       // NOTE(llogan): only for the unit tests
       // Please don't enable synchronous flushing
       stat.bkt_id_.Flush();
@@ -436,7 +437,7 @@ public:
     if (stat.amode_ & MPI_MODE_DELETE_ON_CLOSE) {
       Remove(stat.path_);
     }
-    if (HERMES_CLIENT_CONF.flushing_mode_ == hermes::FlushingMode::kSync) {
+    if (IOWARP_CAE_CONF->flushing_mode_ == cae::FlushingMode::kSync) {
       // NOTE(llogan): only for the unit tests
       // Please don't enable synchronous flushing
       // stat.bkt_id_.Destroy();
@@ -713,7 +714,7 @@ public:
       return false;
     }
     std::string abs_path = stdfs::absolute(path).string();
-    auto &paths = HERMES_CLIENT_CONF.path_list_;
+    auto &paths = IOWARP_CAE_CONF->path_list_;
     // Check if path is included or excluded
     for (auto &pth : paths) {
       if (pth.Match(abs_path)) {

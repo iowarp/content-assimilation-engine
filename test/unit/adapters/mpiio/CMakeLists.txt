@@ -3,7 +3,7 @@ add_executable(mpiio_adapter_test
   mpiio_adapter_test.cc
   mpiio_adapter_basic_test.cc)
 target_link_libraries(mpiio_adapter_test
-  hermes::hermes_core_client)
+  cae_config)
 target_compile_definitions(mpiio_adapter_test PUBLIC
   HERMES_MPI_TESTS=true)
 jarvis_test(mpiio test_wrp_cae_mpiio_basic_sync)

@@ -9,7 +9,7 @@ add_executable(posix_adapter_test
         posix_adapter_basic_test.cc
         posix_adapter_rs_test.cc)
 target_link_libraries(posix_adapter_test
-        hermes::hermes_core_client)
+        cae_config)
 target_compile_definitions(posix_adapter_test PUBLIC
         HERMES_MPI_TESTS=false)
 jarvis_test(posix test_wrp_cae_posix_basic)
@@ -35,7 +35,7 @@ add_executable(posix_adapter_mpi_test
         # posix_adapter_shared_test.cc
 )
 target_link_libraries(posix_adapter_mpi_test
-        hermes::hermes_core_client Catch2::Catch2 MPI::MPI_CXX)
+        cae_config Catch2::Catch2 MPI::MPI_CXX)
 target_compile_definitions(posix_adapter_mpi_test PUBLIC
         HERMES_MPI_TESTS=true)
 jarvis_test(posix test_wrp_cae_posix_basic_mpi)

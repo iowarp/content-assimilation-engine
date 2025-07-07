@@ -21,9 +21,8 @@ TEST_CASE("BatchedWriteSequentialPersistent",
               std::to_string(TESTER->num_iterations_) +
               "]"
               "[pattern=sequential][file=1]") {
-  HERMES_CLIENT_CONF.SetBaseAdapterMode(hermes::adapter::AdapterMode::kDefault);
-  REQUIRE(HERMES_CLIENT_CONF.GetBaseAdapterMode() ==
-          hermes::adapter::AdapterMode::kDefault);
+  IOWARP_CAE_CONF->SetBaseAdapterMode(cae::AdapterMode::kDefault);
+  REQUIRE(IOWARP_CAE_CONF->GetBaseAdapterMode() == cae::AdapterMode::kDefault);
   TESTER->Pretest();
   SECTION("write to new file always at end") {
     TESTER->test_fopen(TESTER->new_file_, "w+");
@@ -50,9 +49,8 @@ TEST_CASE("BatchedWriteSequentialBypass",
               std::to_string(TESTER->num_iterations_) +
               "]"
               "[pattern=sequential][file=1]") {
-  HERMES_CLIENT_CONF.SetBaseAdapterMode(hermes::adapter::AdapterMode::kBypass);
-  REQUIRE(HERMES_CLIENT_CONF.GetBaseAdapterMode() ==
-          hermes::adapter::AdapterMode::kBypass);
+  IOWARP_CAE_CONF->SetBaseAdapterMode(cae::AdapterMode::kBypass);
+  REQUIRE(IOWARP_CAE_CONF->GetBaseAdapterMode() == cae::AdapterMode::kBypass);
   TESTER->Pretest();
   SECTION("write to new file always at end") {
     TESTER->test_fopen(TESTER->new_file_, "w+");
@@ -79,9 +77,8 @@ TEST_CASE("BatchedWriteSequentialScratch",
               std::to_string(TESTER->num_iterations_) +
               "]"
               "[pattern=sequential][file=1]") {
-  HERMES_CLIENT_CONF.SetBaseAdapterMode(hermes::adapter::AdapterMode::kScratch);
-  REQUIRE(HERMES_CLIENT_CONF.GetBaseAdapterMode() ==
-          hermes::adapter::AdapterMode::kScratch);
+  IOWARP_CAE_CONF->SetBaseAdapterMode(cae::AdapterMode::kScratch);
+  REQUIRE(IOWARP_CAE_CONF->GetBaseAdapterMode() == cae::AdapterMode::kScratch);
   TESTER->Pretest();
   SECTION("write to new file always at end") {
     TESTER->test_fopen(TESTER->new_file_, "w+");

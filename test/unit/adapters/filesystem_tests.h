@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 
+#include "adapters/config/config_manager.h"
 #include "hermes/hermes.h"
 #include "hermes_shm/util/singleton.h"
 
@@ -75,9 +76,9 @@ public:
       return rc;
 
 #if HERMES_INTERCEPT == 1
-    TRANSPARENT_HERMES();
+    cae::IOWARP_CAE_INIT();
     setenv("HERMES_FLUSH_MODE", "kSync", 1);
-    HERMES_CLIENT_CONF.flushing_mode_ = hermes::FlushingMode::kSync;
+    IOWARP_CAE_CONF->flushing_mode_ = cae::FlushingMode::kSync;
 #endif
 
     total_size_ = request_size_ * num_iterations_;
@@ -113,14 +114,14 @@ public:
 
   void IgnoreAllFiles() {
     for (const FileInfo &info : files_) {
-      HERMES_CLIENT_CONF.SetAdapterPathTracking(info.hermes_, false);
-      HERMES_CLIENT_CONF.SetAdapterPathTracking(info.cmp_, false);
+      IOWARP_CAE_CONF->SetAdapterPathTracking(info.hermes_, false);
+      IOWARP_CAE_CONF->SetAdapterPathTracking(info.cmp_, false);
     }
   }
 
   void TrackAllFiles() {
     for (const FileInfo &info : files_) {
-      HERMES_CLIENT_CONF.SetAdapterPathTracking(
+      IOWARP_CAE_CONF->SetAdapterPathTracking(
           info.hermes_, info.flags_.Any(TEST_WITH_HERMES));
     }
   }

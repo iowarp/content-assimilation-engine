@@ -10,13 +10,13 @@
  * have access to the file, you may request a copy from help@hdfgroup.org.   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "hermes_adapters/adapter_constants.h"
-#include "hermes_adapters/mapper/mapper_factory.h"
+#include "adapters/adapter_constants.h"
+#include "adapters/mapper/mapper_factory.h"
 #include "stdio_adapter_test.h"
 
-using hermes::adapter::BlobPlacements;
-using hermes::adapter::kMapperType;
-using hermes::adapter::MapperFactory;
+using cae::BlobPlacements;
+using cae::kMapperType;
+using cae::MapperFactory;
 
 TEST_CASE("SingleWrite", "[process=" + std::to_string(TESTER->comm_size_) +
                              "]"

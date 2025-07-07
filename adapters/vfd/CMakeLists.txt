@@ -32,7 +32,7 @@ target_include_directories(hdf5_hermes_vfd
 add_dependencies(hdf5_hermes_vfd
   hermes_fs_base)
 target_link_libraries(hdf5_hermes_vfd
-  hermes::hermes_core_client hermes_fs_base
+  cae_config hermes_fs_base
   MPI::MPI_CXX
   ${HDF5_CAE_VFD_EXT_LIB_DEPENDENCIES})
 

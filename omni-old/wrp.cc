@@ -917,8 +917,8 @@ int set_blackhole() {
 
   std::cout << "checking IOWarp runtime...";
 #ifdef USE_HERMES
-  if (!CAE_INIT()) {
-    std::cerr << std::endl << "Error: CAE_INIT() failed." << std::endl;
+  if (!IOWARP_CAE_INIT()) {
+    std::cerr << std::endl << "Error: IOWARP_CAE_INIT() failed." << std::endl;
     return -1;
   };
 #endif

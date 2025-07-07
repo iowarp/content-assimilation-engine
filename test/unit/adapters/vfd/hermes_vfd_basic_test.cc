@@ -715,8 +715,7 @@ TEST_CASE("ScratchMode", "[mode=scratch]") {
     TESTER->TestClose();
     REQUIRE(TESTER->hermes_herr_ >= 0);
 
-    if (HERMES_CLIENT_CONF.GetBaseAdapterMode() ==
-        hermes::adapter::AdapterMode::kScratch) {
+    if (IOWARP_CAE_CONF->GetBaseAdapterMode() == cae::AdapterMode::kScratch) {
       REQUIRE(!stdfs::exists(TESTER->new_file_.hermes_));
     }
   }

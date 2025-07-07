@@ -13,7 +13,7 @@ add_library(hermes_fs_base SHARED
         filesystem_mdm.h)
 target_link_libraries(hermes_fs_base
         MPI::MPI_CXX
-        hermes::hermes_core_client)
+        cae_config)
 
 # -----------------------------------------------------------------------------
 # Add Target(s) to CMake Install
@@ -53,3 +53,21 @@ install(
 if(CAE_ENABLE_COVERAGE)
         set_coverage_flags(hermes_fs_base)
 endif()
+
+# Add filesystem library
+add_library(cae_filesystem SHARED
+  filesystem.cc
+)
+
+# Add dependencies
+target_link_libraries(cae_filesystem
+  PUBLIC
+    cae_config
+)
+
+# Include directories
+target_include_directories(cae_filesystem
+  PUBLIC
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_BINARY_DIR}
+)

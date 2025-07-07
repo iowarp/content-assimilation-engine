@@ -181,7 +181,7 @@ std::string BuildMpiCommand(const OmniJobConfig::DataEntry &entry, int nprocs,
                                       "PYTHONPATH",
                                       "CUDA_VISIBLE_DEVICES",
                                       "HERMES_CONF",
-                                      "HERMES_CLIENT_CONF",
+                                      "IOWARP_CAE_CONF",
                                       nullptr};
 
   for (int i = 0; important_env_vars[i] != nullptr; ++i) {

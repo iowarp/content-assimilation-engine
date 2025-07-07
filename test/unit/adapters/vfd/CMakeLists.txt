@@ -15,7 +15,7 @@ target_include_directories(hermes_vfd_adapter_test
 target_compile_definitions(hermes_vfd_adapter_test PUBLIC
         HERMES_INTERCEPT=1 HERMES_MPI_TESTS=true)
 target_link_libraries(hermes_vfd_adapter_test
-        hermes::hermes_core_client
+        cae_config
         Catch2::Catch2
         MPI::MPI_CXX
         stdc++fs
