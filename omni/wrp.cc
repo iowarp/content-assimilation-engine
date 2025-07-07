@@ -3,6 +3,7 @@
 #include "repo/repo_factory.h"
 #include <cstdlib>
 #include <iostream>
+#include <limits.h> // For PATH_MAX
 #include <mpi.h>
 #include <pwd.h>
 #include <sstream>
@@ -39,6 +40,7 @@ std::string ExpandPath(const std::string &path) {
 struct OmniJobConfig {
   std::string name;
   int max_scale;
+  std::string hostfile; // Add hostfile to config
 
   struct DataEntry {
     std::string path;
@@ -146,7 +148,8 @@ OmniJobConfig ParseOmniFile(const std::string &yaml_file) {
   return config;
 }
 
-std::string BuildMpiCommand(const OmniJobConfig::DataEntry &entry, int nprocs) {
+std::string BuildMpiCommand(const OmniJobConfig::DataEntry &entry, int nprocs,
+                            const std::string &hostfile) {
   std::ostringstream cmd;
 
   // Build description string
@@ -164,6 +167,11 @@ std::string BuildMpiCommand(const OmniJobConfig::DataEntry &entry, int nprocs) {
   // Construct MPI command with environment forwarding
   cmd << "mpirun -x LD_PRELOAD"; // Forward LD_PRELOAD explicitly
 
+  // Add hostfile if provided
+  if (!hostfile.empty()) {
+    cmd << " --hostfile " << hostfile;
+  }
+
   // Forward other important environment variables
   const char *important_env_vars[] = {"PATH",
                                       "HOME",
@@ -172,6 +180,8 @@ std::string BuildMpiCommand(const OmniJobConfig::DataEntry &entry, int nprocs) {
                                       "LD_LIBRARY_PATH",
                                       "PYTHONPATH",
                                       "CUDA_VISIBLE_DEVICES",
+                                      "HERMES_CONF",
+                                      "HERMES_CLIENT_CONF",
                                       nullptr};
 
   for (int i = 0; important_env_vars[i] != nullptr; ++i) {
@@ -181,7 +191,7 @@ std::string BuildMpiCommand(const OmniJobConfig::DataEntry &entry, int nprocs) {
   }
 
   cmd << " -np " << nprocs;
-  cmd << " ./wrp_binary_format_mpi";
+  cmd << " wrp_binary_format_mpi";
   cmd << " \"" << entry.path << "\"";
   cmd << " " << entry.offset;
   cmd << " " << entry.size;
@@ -197,7 +207,8 @@ std::string BuildMpiCommand(const OmniJobConfig::DataEntry &entry, int nprocs) {
   return cmd.str();
 }
 
-void ProcessDataEntry(const OmniJobConfig::DataEntry &entry, int nprocs) {
+void ProcessDataEntry(const OmniJobConfig::DataEntry &entry, int nprocs,
+                      const std::string &hostfile) {
   std::cout << "\n" << std::string(50, '=') << std::endl;
   std::cout << "Processing Data Entry" << std::endl;
   std::cout << std::string(50, '=') << std::endl;
@@ -207,7 +218,7 @@ void ProcessDataEntry(const OmniJobConfig::DataEntry &entry, int nprocs) {
   std::cout << "MPI Processes: " << nprocs << std::endl;
 
   // Build and execute MPI command
-  std::string mpi_command = BuildMpiCommand(entry, nprocs);
+  std::string mpi_command = BuildMpiCommand(entry, nprocs, hostfile);
   std::cout << "Executing: " << mpi_command << std::endl;
   std::cout << std::string(50, '-') << std::endl;
 
@@ -228,7 +239,8 @@ int main(int argc, char *argv[]) {
   MPI_Init(&argc, &argv);
 
   if (argc < 2) {
-    std::cerr << "Usage: " << argv[0] << " <omni_yaml_file>" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " <omni_yaml_file> [hostfile]"
+              << std::endl;
     MPI_Finalize();
     return 1;
   }
@@ -240,25 +252,23 @@ int main(int argc, char *argv[]) {
     // Parse the OMNI YAML file
     OmniJobConfig config = ParseOmniFile(argv[1]);
 
+    // Get hostfile from command line or config
+    std::string hostfile;
+    if (argc > 2) {
+      hostfile = argv[2];
+    } else if (getenv("OMNI_HOSTFILE")) {
+      hostfile = getenv("OMNI_HOSTFILE");
+    }
+
     if (rank == 0) {
       std::cout << "OMNI Content Assimilation Engine" << std::endl;
       std::cout << "=================================" << std::endl;
       std::cout << "Job: " << config.name << std::endl;
       std::cout << "Max scale: " << config.max_scale << std::endl;
+      std::cout << "Hostfile: "
+                << (hostfile.empty() ? "not specified" : hostfile) << std::endl;
       std::cout << "Number of data entries: " << config.data_entries.size()
                 << std::endl;
-
-      // Check if wrp_binary_format_mpi exists
-      if (system("test -x ./wrp_binary_format_mpi") != 0) {
-        std::cerr
-            << "Error: wrp_binary_format_mpi binary not found or not executable"
-            << std::endl;
-        std::cerr
-            << "Make sure it's built and available in the current directory"
-            << std::endl;
-        MPI_Finalize();
-        return 1;
-      }
 
       // Process each data entry
       for (size_t i = 0; i < config.data_entries.size(); ++i) {
@@ -275,7 +285,7 @@ int main(int argc, char *argv[]) {
                                         nthreads);
 
         // Process the data entry using MPI subprocess
-        ProcessDataEntry(entry, nprocs);
+        ProcessDataEntry(entry, nprocs, hostfile);
       }
 
       std::cout << "\n" << std::string(50, '=') << std::endl;

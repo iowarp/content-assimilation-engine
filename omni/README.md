@@ -521,14 +521,12 @@ For debugging, you can run components separately:
 1. Create a new class inheriting from `FormatClient`
 2. Implement the `Import()` method
 3. Add the format to the `Format` enum in `OMNI.h`
-4. Update `FormatFactory::Get()` in `factory.cc`
 
 ### Adding New Repository Clients
 
 1. Create a new class inheriting from `RepoClient`
 2. Implement `RecommendScale()` and `Download()` methods
 3. Add the repository to the `Repository` enum in `OMNI.h`
-4. Update `RepoFactory::Get()` in `factory.cc`
 
 ## File Structure
 
@@ -536,7 +534,6 @@ For debugging, you can run components separately:
 omni/
 ├── OMNI.h                    # Core interfaces and data structures
 ├── OMNI_factory.h           # Factory class declarations
-├── factory.cc               # Factory implementations
 ├── binary_file_omni.h       # Binary file format client header
 ├── binary_file_omni.cc      # Binary file processor + MPI main()
 ├── filesystem_repo_omni.h   # Filesystem repository client header

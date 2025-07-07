@@ -24,7 +24,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Source files for the factory and repository implementations
 set(OMNI_FACTORY_SOURCES
-    factory.cc
     format/format_factory.cc
     repo/repo_factory.cc
 )

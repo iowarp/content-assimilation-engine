@@ -14,7 +14,7 @@ pkgs:
     pkg_name: hermes_run
   - pkg_type: cae_adapter
     pkg_name: cae_adapter
-    posix: true
+    stdio: true
     sleep: 1
   - pkg_type: omni_parse
     pkg_name: omni_parse

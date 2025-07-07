@@ -98,6 +98,9 @@ public:
       std::cout << "Read chunk: " << bytes_read
                 << " bytes (total: " << total_read << "/" << ctx.size_ << ")"
                 << std::endl;
+
+      // Call progress callback
+      OnChunkProcessed(total_read);
     }
 
     fclose(file);
@@ -112,6 +115,9 @@ public:
                 << ctx.size_ << " requested bytes" << std::endl;
     }
   }
+
+protected:
+  virtual void OnChunkProcessed(size_t bytes_processed) {}
 };
 
 } // namespace cae

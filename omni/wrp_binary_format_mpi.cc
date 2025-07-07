@@ -1,10 +1,14 @@
 #include "format/binary_file_omni.h"
+#include "format/progress_bar.h"
 #include <cstdlib>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <memory>
 #include <mpi.h>
 #include <string>
 
-using namespace cae;
+namespace cae {
 
 void PrintUsage(const char *program_name) {
   std::cerr << "Usage: " << program_name
@@ -21,6 +25,31 @@ void PrintUsage(const char *program_name) {
             << std::endl;
 }
 
+class BinaryFileOmniWithProgress : public BinaryFileOmni {
+public:
+  BinaryFileOmniWithProgress(const std::string &filename, size_t total_size,
+                             int rank)
+      : progress_(std::make_unique<ProgressBar>(
+            std::filesystem::path(filename).filename().string(), total_size,
+            rank)),
+        total_size_(total_size) {}
+
+protected:
+  virtual void OnChunkProcessed(size_t bytes_processed) override {
+    progress_->Update(bytes_processed);
+    if (bytes_processed == total_size_) {
+      progress_->Finish();
+      std::cout << std::endl; // Move to next line after completion
+    }
+  }
+
+private:
+  std::unique_ptr<ProgressBar> progress_;
+  size_t total_size_;
+};
+
+} // namespace cae
+
 int main(int argc, char *argv[]) {
   // Initialize MPI
   MPI_Init(&argc, &argv);
@@ -30,50 +59,36 @@ int main(int argc, char *argv[]) {
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   // Check command line arguments
-  if (argc < 4) {
+  if (argc < 2) {
     if (rank == 0) {
-      PrintUsage(argv[0]);
+      std::cerr << "Usage: " << argv[0] << " <binary_file>" << std::endl;
     }
     MPI_Finalize();
     return 1;
   }
 
   try {
-    // Parse command line arguments to create FormatContext
-    FormatContext ctx;
-    ctx.filename_ = argv[1];
-    ctx.offset_ = std::stoull(argv[2]);
-    ctx.size_ = std::stoull(argv[3]);
+    std::string filename = argv[1];
+    size_t file_size = 0;
 
-    // Optional parameters
-    if (argc > 4) {
-      ctx.description_ = argv[4];
-    }
-    if (argc > 5) {
-      ctx.hash_ = argv[5];
-    }
-
+    // Get file size (only rank 0 needs to do this)
     if (rank == 0) {
-      std::cout << "MPI Binary Format Processor" << std::endl;
-      std::cout << "===========================" << std::endl;
-      std::cout << "Number of MPI processes: " << size << std::endl;
-      std::cout << "File: " << ctx.filename_ << std::endl;
-      std::cout << "Total size: " << ctx.size_ << " bytes" << std::endl;
-      std::cout << "Starting offset: " << ctx.offset_ << " bytes" << std::endl;
-      if (!ctx.description_.empty()) {
-        std::cout << "Description: " << ctx.description_ << std::endl;
+      std::ifstream file(filename, std::ios::binary | std::ios::ate);
+      if (!file) {
+        throw std::runtime_error("Could not open file: " + filename);
       }
-      if (!ctx.hash_.empty()) {
-        std::cout << "Expected hash: " << ctx.hash_ << std::endl;
-      }
+      file_size = file.tellg();
     }
+
+    // Broadcast file size to all ranks
+    MPI_Bcast(&file_size, 1, MPI_UNSIGNED_LONG_LONG, 0, MPI_COMM_WORLD);
 
     // Calculate per-process work distribution
-    size_t bytes_per_process = ctx.size_ / size;
-    size_t remaining_bytes = ctx.size_ % size;
+    size_t bytes_per_process = file_size / size;
+    size_t remaining_bytes = file_size % size;
 
     // Calculate this process's portion
-    size_t process_offset = ctx.offset_ + (rank * bytes_per_process);
+    size_t process_offset = rank * bytes_per_process;
     size_t process_size = bytes_per_process;
 
     // Distribute remaining bytes to the first few processes
@@ -84,40 +99,24 @@ int main(int argc, char *argv[]) {
       process_offset += remaining_bytes;
     }
 
-    // Create FormatContext for this process's portion
-    FormatContext process_ctx = ctx;
-    process_ctx.offset_ = process_offset;
-    process_ctx.size_ = process_size;
+    // Create format client with progress bar
+    cae::BinaryFileOmniWithProgress format(filename, process_size, rank);
 
-    if (process_size > 0) {
-      std::cout << "Rank " << rank << ": Processing " << process_size
-                << " bytes at offset " << process_offset << std::endl;
+    // Create context for this process's portion
+    cae::FormatContext ctx;
+    ctx.filename_ = filename;
+    ctx.offset_ = process_offset;
+    ctx.size_ = process_size;
 
-      // Create binary format client and process data
-      BinaryFileOmni client;
+    // Process the data
+    format.Import(ctx);
 
-      std::cout << "Rank " << rank << ": " << client.Describe(process_ctx)
-                << std::endl;
-
-      // Process the data
-      client.Import(process_ctx);
-
-      std::cout << "Rank " << rank << ": Completed processing" << std::endl;
-    } else {
-      std::cout << "Rank " << rank << ": No data to process" << std::endl;
-    }
-
-    // Synchronize all processes before finishing
+    // Wait for all ranks to complete
     MPI_Barrier(MPI_COMM_WORLD);
 
-    if (rank == 0) {
-      std::cout << "All MPI processes completed successfully!" << std::endl;
-    }
-
   } catch (const std::exception &e) {
-    std::cerr << "Error on rank " << rank << ": " << e.what() << std::endl;
+    std::cerr << "Rank " << rank << " error: " << e.what() << std::endl;
     MPI_Abort(MPI_COMM_WORLD, 1);
-    return 1;
   }
 
   MPI_Finalize();
