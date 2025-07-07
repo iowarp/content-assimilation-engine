@@ -2,7 +2,7 @@
 name: terra_hdf5_full_load
 max_scale: 8  # Use up to 8 processes for large file processing
 data:
-- path: /home/llogan/Downloads/TERRA_BF_L1B_O10204_20011118010522_F000_V001.h5
+- path: ~/Downloads/TERRA_BF_L1B_O10204_20011118010522_F000_V001.h5
   offset: 0  # Start from beginning of file
   # size omitted to read entire file
   description:
