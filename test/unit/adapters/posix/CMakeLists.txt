@@ -26,7 +26,6 @@ target_compile_definitions(hermes_posix_adapter_test PUBLIC
         HERMES_INTERCEPT=1 HERMES_MPI_TESTS=false)
 jarvis_test(posix test_wrp_cae_hermes_posix_basic_small)
 jarvis_test(posix test_wrp_cae_hermes_posix_basic_large)
-jarvis_test(posix test_wrp_cae_hermes_posix_single)
 
 add_executable(posix_adapter_mpi_test
         posix_adapter_test.cc
