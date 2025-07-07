@@ -1,4 +1,4 @@
-name: test_wrp_cae_hermes_posix_basic_small
+name: test_wrp_cae_hermes_mpiio_basic_async
 env: hermes
 pkgs:
   - pkg_type: chimaera_run
@@ -9,11 +9,10 @@ pkgs:
     modules: ['hermes_hermes_core']
   - pkg_type: hermes_run
     pkg_name: hermes_run
-  - pkg_type: cae_posix_tests
-    pkg_name: cae_posix_tests
-    test_file: posix_basic
-    test_case: SingleWrite
+  - pkg_type: cae_run
+    pkg_name: cae_run
+  - pkg_type: cae_mpiio_tests
+    pkg_name: cae_mpiio_tests
+    test_file: mpiio_basic
     hermes: true
-    dbg_port: 4001
-    do_dbg: false
-    # size: small
+    sync: async

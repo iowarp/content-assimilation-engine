@@ -1,4 +1,4 @@
-name: test_wrp_cae_hermes_stdio_basic_mpi_large
+name: test_wrp_cae_hermes_stdio_adapter_scratch
 env: hermes
 pkgs:
   - pkg_type: chimaera_run
@@ -9,8 +9,11 @@ pkgs:
     modules: ['hermes_hermes_core']
   - pkg_type: hermes_run
     pkg_name: hermes_run
+  - pkg_type: cae_run
+    pkg_name: cae_run
   - pkg_type: cae_stdio_tests
     pkg_name: cae_stdio_tests
-    test_file: stdio_basic_mpi
+    test_file: stdio_adapter_mode
+    test_case: BatchedWriteSequentialScratch
     hermes: true
-    size: large
+    size: small

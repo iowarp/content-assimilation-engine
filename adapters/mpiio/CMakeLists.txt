@@ -15,11 +15,11 @@ elseif(CAE_OPENMPI)
 endif()
 
 set(INTERCEPTOR_DEPS
-        cae_config hermes_fs_base)
-add_library(hermes_mpiio SHARED
+        cae_config cae_fs_base)
+add_library(cae_mpiio SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/mpiio_api.cc)
-add_dependencies(hermes_mpiio ${INTERCEPTOR_DEPS})
-target_link_libraries(hermes_mpiio
+add_dependencies(cae_mpiio ${INTERCEPTOR_DEPS})
+target_link_libraries(cae_mpiio
         MPI::MPI_CXX stdc++fs ${libelf_LIBRARIES} dl ${INTERCEPTOR_DEPS})
 
 # -----------------------------------------------------------------------------
@@ -27,7 +27,7 @@ target_link_libraries(hermes_mpiio
 # -----------------------------------------------------------------------------
 install(
         TARGETS
-        hermes_mpiio
+        cae_mpiio
         LIBRARY DESTINATION ${CAE_INSTALL_LIB_DIR}
         ARCHIVE DESTINATION ${CAE_INSTALL_LIB_DIR}
         RUNTIME DESTINATION ${CAE_INSTALL_BIN_DIR}
@@ -50,5 +50,5 @@ install(
 # Add Target(s) to Coverage
 # -----------------------------------------------------------------------------
 if(CAE_ENABLE_COVERAGE)
-        set_coverage_flags(hermes_mpiio)
+        set_coverage_flags(cae_mpiio)
 endif()

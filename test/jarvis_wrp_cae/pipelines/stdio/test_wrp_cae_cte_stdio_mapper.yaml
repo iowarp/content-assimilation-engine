@@ -1,4 +1,4 @@
-name: test_wrp_cae_hermes_stdio_low_buf
+name: test_wrp_cae_hermes_stdio_mapper
 env: hermes
 pkgs:
   - pkg_type: chimaera_run
@@ -9,7 +9,9 @@ pkgs:
     modules: ['hermes_hermes_core']
   - pkg_type: hermes_run
     pkg_name: hermes_run
+  - pkg_type: cae_run
+    pkg_name: cae_run
   - pkg_type: cae_stdio_tests
     pkg_name: cae_stdio_tests
-    test_file: stdio_low_buf
+    test_file: stdio_mapper
     hermes: true

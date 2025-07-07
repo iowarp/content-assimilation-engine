@@ -1,4 +1,4 @@
-name: test_wrp_cae_hermes_vfd_scratch
+name: test_wrp_cae_hermes_stdio_basic_mpi_small
 env: hermes
 pkgs:
   - pkg_type: chimaera_run
@@ -9,8 +9,10 @@ pkgs:
     modules: ['hermes_hermes_core']
   - pkg_type: hermes_run
     pkg_name: hermes_run
-  - pkg_type: cae_vfd_tests
-    pkg_name: cae_vfd_tests
-    test_file: vfd_basic
+  - pkg_type: cae_run
+    pkg_name: cae_run
+  - pkg_type: cae_stdio_tests
+    pkg_name: cae_stdio_tests
+    test_file: stdio_basic_mpi
     hermes: true
-    mode: scratch
+    size: small

@@ -1,38 +1,36 @@
-set(HERMES_VFD_DIR ${HERMES_ADAPTER_DIR}/vfd)
+set(CAE_VFD_DIR ${HERMES_ADAPTER_DIR}/vfd)
 
-set(hermes_vfd_tests
-        hermes_vfd_adapter_test
+set(cae_vfd_tests
+        cae_vfd_adapter_test
 )
-
-add_executable(hermes_vfd_adapter_test
+add_executable(cae_vfd_adapter_test
         ${CMAKE_CURRENT_SOURCE_DIR}/hermes_vfd_test.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/hermes_vfd_basic_test.cc)
-target_include_directories(hermes_vfd_adapter_test PRIVATE ${HERMES_VFD_DIR})
-target_include_directories(hermes_vfd_adapter_test PRIVATE ${HERMES_ADAPTER_TEST_DIR})
-target_include_directories(hermes_vfd_adapter_test
+target_include_directories(cae_vfd_adapter_test PRIVATE ${CAE_VFD_DIR})
+target_include_directories(cae_vfd_adapter_test PRIVATE ${HERMES_ADAPTER_TEST_DIR})
+target_include_directories(cae_vfd_adapter_test
         SYSTEM PRIVATE ${HDF5_CAE_VFD_EXT_INCLUDE_DEPENDENCIES}
 )
-target_compile_definitions(hermes_vfd_adapter_test PUBLIC
-        HERMES_INTERCEPT=1 HERMES_MPI_TESTS=true)
-target_link_libraries(hermes_vfd_adapter_test
-        cae_config
+target_compile_definitions(cae_vfd_adapter_test PUBLIC
+        CATCH_CONFIG_ENABLE_BENCHMARKING)
+target_link_libraries(cae_vfd_adapter_test
+        hdf5_cae_vfd
         Catch2::Catch2
-        MPI::MPI_CXX
-        stdc++fs
-        ${HDF5_CAE_VFD_EXT_LIB_DEPENDENCIES})
+        -lstdc++fs
+        -lc
+        MPI::MPI_CXX)
 
-jarvis_test(vfd test_wrp_cae_hermes_vfd_basic)
-jarvis_test(vfd test_wrp_cae_hermes_vfd_scratch)
-jarvis_test(vfd test_wrp_cae_hermes_vfd_python)
-jarvis_test(vfd test_wrp_cae_vfd_python)
+foreach(program ${cae_vfd_tests})
+  install(
+    TARGETS
+    ${program}
+    RUNTIME DESTINATION ${CAE_INSTALL_BIN_DIR}
+  )
+endforeach()
 
-install(
-        TARGETS
-        hermes_vfd_adapter_test
-        LIBRARY DESTINATION ${CAE_INSTALL_LIB_DIR}
-        ARCHIVE DESTINATION ${CAE_INSTALL_LIB_DIR}
-        RUNTIME DESTINATION ${CAE_INSTALL_BIN_DIR}
-)
+jarvis_test(vfd test_wrp_cae_cte_vfd_basic)
+jarvis_test(vfd test_wrp_cae_cte_vfd_scratch)
+jarvis_test(vfd test_wrp_cae_cte_vfd_python)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/hermes_vfd_py_test.py
         DESTINATION ${CAE_INSTALL_BIN_DIR}

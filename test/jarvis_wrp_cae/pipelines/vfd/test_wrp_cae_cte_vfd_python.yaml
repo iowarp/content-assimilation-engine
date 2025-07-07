@@ -9,7 +9,9 @@ pkgs:
     modules: ['hermes_hermes_core']
   - pkg_type: hermes_run
     pkg_name: hermes_run
-    - pkg_type: cae_adapter
+  - pkg_type: cae_run
+    pkg_name: cae_run
+  - pkg_type: cae_adapter
     pkg_name: cae_adapter
     vfd: true
   - pkg_type: cae_vfd_tests

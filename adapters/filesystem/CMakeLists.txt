@@ -6,12 +6,12 @@ include_directories(
         .)
 
 # Create the metadata manager singleton + FS base class
-add_library(hermes_fs_base SHARED
+add_library(cae_fs_base SHARED
         filesystem.cc
         filesystem.h
         filesystem_io_client.h
         filesystem_mdm.h)
-target_link_libraries(hermes_fs_base
+target_link_libraries(cae_fs_base
         MPI::MPI_CXX
         cae_config)
 
@@ -20,7 +20,7 @@ target_link_libraries(hermes_fs_base
 # -----------------------------------------------------------------------------
 install(
         TARGETS
-        hermes_fs_base
+        cae_fs_base
         LIBRARY DESTINATION ${CAE_INSTALL_LIB_DIR}
         ARCHIVE DESTINATION ${CAE_INSTALL_LIB_DIR}
         RUNTIME DESTINATION ${CAE_INSTALL_BIN_DIR}
@@ -51,7 +51,7 @@ install(
 # Add Target(s) to Coverage
 # -----------------------------------------------------------------------------
 if(CAE_ENABLE_COVERAGE)
-        set_coverage_flags(hermes_fs_base)
+        set_coverage_flags(cae_fs_base)
 endif()
 
 # Add filesystem library

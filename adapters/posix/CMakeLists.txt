@@ -7,12 +7,12 @@ include_directories(
 
 # Create the POSIX interceptor
 set(INTERCEPTOR_DEPS
-        cae_config hermes_fs_base)
-add_library(hermes_posix SHARED
+        cae_config cae_fs_base)
+add_library(cae_posix SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/posix_api.cc)
-add_dependencies(hermes_posix ${INTERCEPTOR_DEPS})
-target_link_libraries(hermes_posix MPI::MPI_CXX stdc++fs ${libelf_LIBRARIES} ${INTERCEPTOR_DEPS})
-set_target_properties(hermes_posix PROPERTIES POSITION_INDEPENDENT_CODE ON)
+add_dependencies(cae_posix ${INTERCEPTOR_DEPS})
+target_link_libraries(cae_posix MPI::MPI_CXX stdc++fs ${libelf_LIBRARIES} ${INTERCEPTOR_DEPS})
+set_target_properties(cae_posix PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 
 # -----------------------------------------------------------------------------
@@ -20,7 +20,7 @@ set_target_properties(hermes_posix PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # -----------------------------------------------------------------------------
 install(
         TARGETS
-        hermes_posix
+        cae_posix
         LIBRARY DESTINATION ${CAE_INSTALL_LIB_DIR}
         ARCHIVE DESTINATION ${CAE_INSTALL_LIB_DIR}
         RUNTIME DESTINATION ${CAE_INSTALL_BIN_DIR}
@@ -43,5 +43,5 @@ install(
 # Add Target(s) to Coverage
 # -----------------------------------------------------------------------------
 if(CAE_ENABLE_COVERAGE)
-        set_coverage_flags(hermes_posix)
+        set_coverage_flags(cae_posix)
 endif()

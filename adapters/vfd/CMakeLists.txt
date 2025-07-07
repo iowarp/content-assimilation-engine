@@ -25,18 +25,18 @@ set(HDF5_CAE_VFD_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/H5FDhermes.h
   ${CMAKE_CURRENT_SOURCE_DIR}/H5FDhermes.cc)
 
-add_library(hdf5_hermes_vfd SHARED ${HDF5_CAE_VFD_SRCS})
-target_include_directories(hdf5_hermes_vfd
+add_library(hdf5_cae_vfd SHARED ${HDF5_CAE_VFD_SRCS})
+target_include_directories(hdf5_cae_vfd
   SYSTEM PUBLIC ${HDF5_CAE_VFD_EXT_INCLUDE_DEPENDENCIES}
 )
-add_dependencies(hdf5_hermes_vfd
-  hermes_fs_base)
-target_link_libraries(hdf5_hermes_vfd
-  cae_config hermes_fs_base
+add_dependencies(hdf5_cae_vfd
+  cae_fs_base)
+target_link_libraries(hdf5_cae_vfd
+  cae_config cae_fs_base
   MPI::MPI_CXX
   ${HDF5_CAE_VFD_EXT_LIB_DEPENDENCIES})
 
-set(HDF5_CAE_VFD_EXPORTED_LIBS hdf5_hermes_vfd ${HDF5_CAE_VFD_EXPORTED_LIBS} PARENT_SCOPE)
+set(HDF5_CAE_VFD_EXPORTED_LIBS hdf5_cae_vfd ${HDF5_CAE_VFD_EXPORTED_LIBS} PARENT_SCOPE)
 
 # -----------------------------------------------------------------------------
 # Specify project header files to be installed
@@ -61,7 +61,7 @@ install(
 # -----------------------------------------------------------------------------
 install(
   TARGETS
-  hdf5_hermes_vfd
+  hdf5_cae_vfd
   LIBRARY DESTINATION ${CAE_INSTALL_LIB_DIR}/${CAE_VFD_DIR_NAME}
   ARCHIVE DESTINATION ${CAE_INSTALL_LIB_DIR}/${CAE_VFD_DIR_NAME}
   RUNTIME DESTINATION ${CAE_INSTALL_BIN_DIR}
