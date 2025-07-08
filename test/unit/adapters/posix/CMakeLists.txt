@@ -25,7 +25,6 @@ target_compile_definitions(cae_posix_adapter_test PUBLIC
         HERMES_INTERCEPT=1 HERMES_MPI_TESTS=false CATCH_CONFIG_ENABLE_BENCHMARKING)
 jarvis_test(posix test_wrp_cae_cte_posix_basic_small)
 jarvis_test(posix test_wrp_cae_cte_posix_basic_large)
-jarvis_test(posix test_wrp_cae_posix_basic)
 
 add_executable(posix_adapter_mpi_test
         posix_adapter_test.cc
@@ -50,7 +49,6 @@ target_compile_definitions(cae_posix_adapter_mpi_test PUBLIC
         HERMES_INTERCEPT=1 HERMES_MPI_TESTS=true)
 jarvis_test(posix test_wrp_cae_cte_posix_basic_mpi_small)
 jarvis_test(posix test_wrp_cae_cte_posix_basic_mpi_large)
-jarvis_test(posix test_wrp_cae_posix_basic_mpi)
 
 include_directories(${CMAKE_SOURCE_DIR}/adapter)
 add_executable(posix_simple_io_mpi posix_simple_io_mpi.cc)
@@ -70,7 +68,6 @@ target_compile_definitions(posix_simple_io_omp PUBLIC
         HERMES_MPI_TESTS=false)
 
 jarvis_test(posix test_wrp_cae_cte_posix_simple_io_omp)
-jarvis_test(posix test_wrp_cae_posix_simple_io_omp)
 
 set(POSIX_TESTS
         posix_adapter_test

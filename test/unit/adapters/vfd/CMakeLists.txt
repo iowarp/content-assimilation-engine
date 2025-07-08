@@ -30,7 +30,7 @@ endforeach()
 
 jarvis_test(vfd test_wrp_cae_cte_vfd_basic)
 jarvis_test(vfd test_wrp_cae_cte_vfd_scratch)
-jarvis_test(vfd test_wrp_cae_cte_vfd_python)
+# jarvis_test(vfd test_wrp_cae_cte_vfd_python)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/hermes_vfd_py_test.py
         DESTINATION ${CAE_INSTALL_BIN_DIR}

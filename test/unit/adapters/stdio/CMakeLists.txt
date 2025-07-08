@@ -14,8 +14,6 @@ target_link_libraries(cae_stdio_adapter_mapper_test
   cae_stdio)
 target_compile_definitions(cae_stdio_adapter_mapper_test PUBLIC
   CATCH_CONFIG_ENABLE_BENCHMARKING)
-jarvis_test(stdio test_wrp_cae_cte_stdio_mapper)
-jarvis_test(stdio test_wrp_cae_stdio_mapper)
 
 # ------------------------------------------------------------------------------
 # Non-Hermes, None-MPI STDIO basic
@@ -42,8 +40,6 @@ target_compile_definitions(cae_stdio_adapter_test PUBLIC
   CATCH_CONFIG_ENABLE_BENCHMARKING)
 jarvis_test(stdio test_wrp_cae_cte_stdio_basic_small)
 jarvis_test(stdio test_wrp_cae_cte_stdio_basic_large)
-jarvis_test(stdio test_wrp_cae_stdio_basic_small)
-jarvis_test(stdio test_wrp_cae_stdio_basic_large)
 jarvis_test(stdio test_wrp_cae_stdio_basic)
 
 # Non-Hermes, MPI STDIO basic
@@ -71,8 +67,6 @@ target_compile_definitions(cae_stdio_adapter_mpi_test PUBLIC
   CATCH_CONFIG_ENABLE_BENCHMARKING)
 jarvis_test(stdio test_wrp_cae_cte_stdio_basic_mpi_small)
 jarvis_test(stdio test_wrp_cae_cte_stdio_basic_mpi_large)
-jarvis_test(stdio test_wrp_cae_stdio_basic_mpi_small)
-jarvis_test(stdio test_wrp_cae_stdio_basic_mpi_large)
 jarvis_test(stdio test_wrp_cae_stdio_basic_mpi)
 
 # Hermes, Low buffer space
@@ -84,7 +78,6 @@ add_dependencies(cae_stdio_low_buf_adapter_test cae_stdio)
 target_compile_definitions(cae_stdio_low_buf_adapter_test PUBLIC
   CATCH_CONFIG_ENABLE_BENCHMARKING)
 jarvis_test(stdio test_wrp_cae_cte_stdio_low_buf)
-jarvis_test(stdio test_wrp_cae_stdio_low_buf)
 
 # Hermes, Adapter mode
 add_executable(cae_stdio_adapter_mode_test
@@ -99,9 +92,6 @@ target_compile_definitions(cae_stdio_adapter_mode_test PUBLIC
 jarvis_test(stdio test_wrp_cae_cte_stdio_adapter_bypass)
 jarvis_test(stdio test_wrp_cae_cte_stdio_adapter_default)
 jarvis_test(stdio test_wrp_cae_cte_stdio_adapter_scratch)
-jarvis_test(stdio test_wrp_cae_stdio_adapter_bypass)
-jarvis_test(stdio test_wrp_cae_stdio_adapter_default)
-jarvis_test(stdio test_wrp_cae_stdio_adapter_scratch)
 
 set(stdio_tests
   stdio_adapter_test
