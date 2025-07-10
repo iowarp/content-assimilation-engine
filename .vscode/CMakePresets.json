@@ -13,7 +13,7 @@
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_INSTALL_PREFIX": "/home/llogan/.scspkg/packages/cae",
+                "CMAKE_INSTALL_PREFIX": "IOWARP_PREFIX",
                 "CAE_ENABLE_CMAKE_DOTENV": "ON",
                 "CAE_ENABLE_VFD": "ON",
                 "CAE_ENABLE_POSIX_ADAPTER": "ON",
