@@ -13,13 +13,13 @@
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_INSTALL_PREFIX": "/home/llogan/.scspkg/packages/cae",
+                "CMAKE_INSTALL_PREFIX": "/home/llogan/.scspkg/packages/content-assimilation-engine",
+                "CAE_ENABLE_CMAKE_DOTENV": "ON",
                 "CAE_ENABLE_VFD": "ON",
                 "CAE_ENABLE_POSIX_ADAPTER": "ON",
                 "CAE_ENABLE_STDIO_ADAPTER": "ON",
                 "CAE_ENABLE_MPIIO_ADAPTER": "ON",
-                "CAE_OPENMPI": "ON",
-                "CAE_ENABLE_CMAKE_DOTENV": "ON"
+                "CAE_OPENMPI": "ON"
             }
         }
     ]
