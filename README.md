@@ -12,7 +12,6 @@ spack load iowarp
 ```
 
 ```
-scspkg create content-assimilation-engine
 cd content-assimilation-engine
 mkdir build
 cd build
