@@ -87,9 +87,17 @@ install(FILES README.md
 configure_file(config/quick_test.yaml ${CMAKE_BINARY_DIR}/omni/config/quick_test.yaml COPYONLY)
 configure_file(config/demo_job.yaml ${CMAKE_BINARY_DIR}/omni/config/demo_job.yaml COPYONLY)
 configure_file(config/example_job.yaml ${CMAKE_BINARY_DIR}/omni/config/example_job.yaml COPYONLY)
+configure_file(config/wildcard_test.yaml ${CMAKE_BINARY_DIR}/omni/config/wildcard_test.yaml COPYONLY)
 
 # Install test script with executable permissions
 install(PROGRAMS config/run_all_tests.sh
+        DESTINATION ${CMAKE_BINARY_DIR}/omni/config/
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                   GROUP_READ GROUP_EXECUTE
+                   WORLD_READ WORLD_EXECUTE)
+
+# Install wildcard test script with executable permissions
+install(PROGRAMS config/test_wildcards.sh
         DESTINATION ${CMAKE_BINARY_DIR}/omni/config/
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
                    GROUP_READ GROUP_EXECUTE

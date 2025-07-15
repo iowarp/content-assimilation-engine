@@ -11,8 +11,14 @@
 #include <unistd.h>
 #include <vector>
 #include <yaml-cpp/yaml.h>
+#include <filesystem>
+#include <glob.h>
+#include <future>
+#include <thread>
+#include <algorithm>
 
 using namespace cae;
+namespace fs = std::filesystem;
 
 std::string ExpandPath(const std::string &path) {
   if (path.empty() || path[0] != '~') {
@@ -37,13 +43,70 @@ std::string ExpandPath(const std::string &path) {
   return path;
 }
 
+std::vector<std::string> ExpandFilePattern(const std::string &pattern) {
+  std::vector<std::string> files;
+  
+  if (pattern.empty()) {
+    std::cerr << "Warning: Empty file pattern provided" << std::endl;
+    return files;
+  }
+  
+  // Check if the pattern contains wildcards
+  bool has_wildcards = (pattern.find('*') != std::string::npos) || 
+                       (pattern.find('?') != std::string::npos) ||
+                       (pattern.find('[') != std::string::npos);
+  
+  if (has_wildcards) {
+    // Use glob to expand wildcards
+    glob_t glob_result;
+    int glob_ret = glob(pattern.c_str(), GLOB_TILDE | GLOB_BRACE, nullptr, &glob_result);
+    
+    if (glob_ret == 0) {
+      for (size_t i = 0; i < glob_result.gl_pathc; ++i) {
+        std::string file_path = glob_result.gl_pathv[i];
+        if (fs::is_regular_file(file_path)) {
+          files.push_back(file_path);
+        }
+      }
+      std::cout << "Expanded pattern '" << pattern << "' to " << files.size() << " files" << std::endl;
+    } else if (glob_ret == GLOB_NOMATCH) {
+      std::cerr << "Warning: No files match pattern: " << pattern << std::endl;
+    } else {
+      std::cerr << "Warning: Error expanding pattern: " << pattern << " (error code: " << glob_ret << ")" << std::endl;
+    }
+    
+    globfree(&glob_result);
+  } else {
+    // Check if it's a directory
+    if (fs::is_directory(pattern)) {
+      for (const auto &entry : fs::directory_iterator(pattern)) {
+        if (entry.is_regular_file()) {
+          files.push_back(entry.path().string());
+        }
+      }
+      std::cout << "Expanded directory '" << pattern << "' to " << files.size() << " files" << std::endl;
+    } else if (fs::is_regular_file(pattern)) {
+      // Single file
+      files.push_back(pattern);
+      std::cout << "Single file: " << pattern << std::endl;
+    } else {
+      std::cerr << "Warning: Path is neither a file nor directory: " << pattern << std::endl;
+    }
+  }
+  
+  // Sort files for consistent ordering
+  std::sort(files.begin(), files.end());
+  
+  return files;
+}
+
 struct OmniJobConfig {
   std::string name;
   int max_scale;
   std::string hostfile; // Add hostfile to config
 
   struct DataEntry {
-    std::string path;
+    std::vector<std::string> paths;  // Changed from single path to multiple paths
     std::vector<size_t> range;
     size_t offset;
     size_t size;
@@ -78,7 +141,9 @@ OmniJobConfig ParseOmniFile(const std::string &yaml_file) {
         OmniJobConfig::DataEntry data_entry;
 
         if (entry["path"]) {
-          data_entry.path = ExpandPath(entry["path"].as<std::string>());
+          std::string expanded_path = ExpandPath(entry["path"].as<std::string>());
+          std::vector<std::string> expanded_files = ExpandFilePattern(expanded_path);
+          data_entry.paths = expanded_files;
         }
 
         if (entry["range"]) {
@@ -108,25 +173,34 @@ OmniJobConfig ParseOmniFile(const std::string &yaml_file) {
         }
 
         // If size is not specified (0), automatically detect file size
-        if (data_entry.size == 0 && !data_entry.path.empty()) {
+        if (data_entry.size == 0 && !data_entry.paths.empty()) {
           FilesystemRepoClient fs_client;
-          size_t file_size = fs_client.GetFileSize(data_entry.path);
+          
+          // For multiple files, we'll use the size of the first file as a template
+          // In practice, you might want to handle each file individually
+          size_t file_size = fs_client.GetFileSize(data_entry.paths[0]);
           if (file_size > 0) {
             // Calculate size as file_size - offset to read from offset to end
             // of file
             if (data_entry.offset < file_size) {
               data_entry.size = file_size - data_entry.offset;
-              std::cout << "Auto-detected size for " << data_entry.path << ": "
+              std::cout << "Auto-detected size for " << data_entry.paths[0] << ": "
                         << data_entry.size << " bytes (from offset "
                         << data_entry.offset << " to end of file)" << std::endl;
             } else {
               std::cerr << "Warning: Offset " << data_entry.offset
                         << " is beyond file size " << file_size << " for "
-                        << data_entry.path << std::endl;
+                        << data_entry.paths[0] << std::endl;
             }
           } else {
             std::cerr << "Warning: Could not determine file size for "
-                      << data_entry.path << std::endl;
+                      << data_entry.paths[0] << std::endl;
+          }
+          
+          // Check if all files have the same size (optional validation)
+          if (data_entry.paths.size() > 1) {
+            std::cout << "Note: Processing " << data_entry.paths.size() 
+                      << " files with same parameters" << std::endl;
           }
         }
 
@@ -192,7 +266,7 @@ std::string BuildMpiCommand(const OmniJobConfig::DataEntry &entry, int nprocs,
 
   cmd << " -np " << nprocs;
   cmd << " wrp_binary_format_mpi";
-  cmd << " \"" << entry.path << "\"";
+  cmd << " \"" << entry.paths[0] << "\""; // Use the first (and only) path
   cmd << " " << entry.offset;
   cmd << " " << entry.size;
 
@@ -212,25 +286,97 @@ void ProcessDataEntry(const OmniJobConfig::DataEntry &entry, int nprocs,
   std::cout << "\n" << std::string(50, '=') << std::endl;
   std::cout << "Processing Data Entry" << std::endl;
   std::cout << std::string(50, '=') << std::endl;
-  std::cout << "File: " << entry.path << std::endl;
+  std::cout << "Files: " << entry.paths.size() << std::endl;
+  for (size_t i = 0; i < entry.paths.size(); ++i) {
+    std::cout << "  File " << (i + 1) << ": " << entry.paths[i] << std::endl;
+  }
   std::cout << "Offset: " << entry.offset << " bytes" << std::endl;
   std::cout << "Size: " << entry.size << " bytes" << std::endl;
   std::cout << "MPI Processes: " << nprocs << std::endl;
 
-  // Build and execute MPI command
-  std::string mpi_command = BuildMpiCommand(entry, nprocs, hostfile);
-  std::cout << "Executing: " << mpi_command << std::endl;
-  std::cout << std::string(50, '-') << std::endl;
+  // Process each file in the entry
+  for (size_t i = 0; i < entry.paths.size(); ++i) {
+    std::cout << "\nProcessing file " << (i + 1) << "/" << entry.paths.size() 
+              << ": " << entry.paths[i] << std::endl;
+    
+    // Create a single-file entry for this file
+    OmniJobConfig::DataEntry single_file_entry;
+    single_file_entry.paths = {entry.paths[i]};
+    single_file_entry.range = entry.range;
+    single_file_entry.offset = entry.offset;
+    single_file_entry.size = entry.size;
+    single_file_entry.description = entry.description;
+    single_file_entry.hash = entry.hash;
+    
+    // Build and execute MPI command for this file
+    std::string mpi_command = BuildMpiCommand(single_file_entry, nprocs, hostfile);
+    std::cout << "Executing: " << mpi_command << std::endl;
+    std::cout << std::string(50, '-') << std::endl;
 
-  int result = system(mpi_command.c_str());
+    int result = system(mpi_command.c_str());
 
-  std::cout << std::string(50, '-') << std::endl;
-  if (result == 0) {
-    std::cout << "✓ Successfully completed processing " << entry.path
-              << std::endl;
-  } else {
-    std::cerr << "✗ Failed to process " << entry.path
-              << " (exit code: " << result << ")" << std::endl;
+    std::cout << std::string(50, '-') << std::endl;
+    if (result == 0) {
+      std::cout << "✓ Successfully completed processing " << entry.paths[i]
+                << std::endl;
+    } else {
+      std::cerr << "✗ Failed to process " << entry.paths[i]
+                << " (exit code: " << result << ")" << std::endl;
+    }
+  }
+}
+
+void ProcessDataEntryAsync(const OmniJobConfig::DataEntry &entry, int nprocs,
+                          const std::string &hostfile) {
+  std::cout << "\n" << std::string(50, '=') << std::endl;
+  std::cout << "Processing Data Entry (Async)" << std::endl;
+  std::cout << std::string(50, '=') << std::endl;
+  std::cout << "Files: " << entry.paths.size() << std::endl;
+  for (size_t i = 0; i < entry.paths.size(); ++i) {
+    std::cout << "  File " << (i + 1) << ": " << entry.paths[i] << std::endl;
+  }
+  std::cout << "Offset: " << entry.offset << " bytes" << std::endl;
+  std::cout << "Size: " << entry.size << " bytes" << std::endl;
+  std::cout << "MPI Processes: " << nprocs << std::endl;
+
+  // Create async tasks for each file
+  std::vector<std::future<void>> futures;
+  
+  for (size_t i = 0; i < entry.paths.size(); ++i) {
+    futures.push_back(std::async(std::launch::async, [&, i, nprocs, hostfile]() {
+      std::cout << "\nProcessing file " << (i + 1) << "/" << entry.paths.size() 
+                << ": " << entry.paths[i] << " (async)" << std::endl;
+      
+      // Create a single-file entry for this file
+      OmniJobConfig::DataEntry single_file_entry;
+      single_file_entry.paths = {entry.paths[i]};
+      single_file_entry.range = entry.range;
+      single_file_entry.offset = entry.offset;
+      single_file_entry.size = entry.size;
+      single_file_entry.description = entry.description;
+      single_file_entry.hash = entry.hash;
+      
+      // Build and execute MPI command for this file
+      std::string mpi_command = BuildMpiCommand(single_file_entry, nprocs, hostfile);
+      std::cout << "Executing: " << mpi_command << std::endl;
+      std::cout << std::string(50, '-') << std::endl;
+
+      int result = system(mpi_command.c_str());
+
+      std::cout << std::string(50, '-') << std::endl;
+      if (result == 0) {
+        std::cout << "✓ Successfully completed processing " << entry.paths[i]
+                  << std::endl;
+      } else {
+        std::cerr << "✗ Failed to process " << entry.paths[i]
+                  << " (exit code: " << result << ")" << std::endl;
+      }
+    }));
+  }
+  
+  // Wait for all async tasks to complete
+  for (auto &future : futures) {
+    future.wait();
   }
 }
 
@@ -275,17 +421,23 @@ int main(int argc, char *argv[]) {
         const auto &entry = config.data_entries[i];
 
         std::cout << "\nData Entry " << (i + 1) << "/"
-                  << config.data_entries.size() << ": " << entry.path
+                  << config.data_entries.size() << ": " << entry.paths[0]
                   << std::endl;
 
         // Use filesystem repo client to recommend scale
         FilesystemRepoClient fs_client;
         int nprocs, nthreads;
-        fs_client.RecommendScaleForFile(entry.path, config.max_scale, nprocs,
+        fs_client.RecommendScaleForFile(entry.paths[0], config.max_scale, nprocs,
                                         nthreads);
 
         // Process the data entry using MPI subprocess
-        ProcessDataEntry(entry, nprocs, hostfile);
+        if (entry.paths.size() > 1) {
+          // Use async processing for multiple files
+          ProcessDataEntryAsync(entry, nprocs, hostfile);
+        } else {
+          // Use synchronous processing for single file
+          ProcessDataEntry(entry, nprocs, hostfile);
+        }
       }
 
       std::cout << "\n" << std::string(50, '=') << std::endl;

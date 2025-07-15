@@ -1,0 +1,27 @@
+# Test OMNI job for wildcard and directory functionality
+name: wildcard_test
+max_scale: 4  # Use up to 4 processes
+data:
+- path: ../data/*.csv  # Wildcard pattern for CSV files
+  offset: 0
+  size: 1000  # Just 1KB for quick test
+  description:
+    - csv
+    - wildcard_test
+  hash: wildcard_test_hash
+
+- path: ../data/  # Directory - will process all files in directory
+  offset: 0
+  size: 500  # Smaller size for directory test
+  description:
+    - directory
+    - test
+  hash: directory_test_hash
+
+- path: ../data/A46_xx.*  # Wildcard for specific file pattern
+  offset: 0
+  size: 2000  # Larger size for pattern test
+  description:
+    - pattern
+    - test
+  hash: pattern_test_hash 
