@@ -18,7 +18,7 @@ jobs:
           brew install poco yaml-cpp
       - name: test
         run: |
-          cd omni
+          cd omni-old
           mkdir build
           cd build
           cmake -DSITE:STRING="${{ matrix.os }}" -DBUILDNAME="omni/r" ..
@@ -26,7 +26,7 @@ jobs:
           cd ../..
       - name: poco
         run: |
-          cd omni
+          cd omni-old
           mkdir poco
           cd poco
           cmake -DPOCO=ON -DSITE:STRING="${{ matrix.os }}" -DBUILDNAME="omni/r/poco" ..

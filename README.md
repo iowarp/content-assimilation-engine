@@ -7,7 +7,7 @@
 ## Installation (Manual)
 
 ```
-spack install iowarp +mpiio +vfd +compres +encrypt
+spack install iowarp +mpiio +vfd +compress +encrypt
 spack load iowarp
 ```
 

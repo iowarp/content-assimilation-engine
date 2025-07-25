@@ -19,7 +19,7 @@ TEST_CASE("Open", "[process=" + std::to_string(TESTER->comm_size_) +
     "[operation=single_open]"
     "[repetition=1][file=1]") {
   TESTER->Pretest();
-  SECTION("open non-existant file") {
+  SECTION("open non-existent file") {
     TESTER->test_open(TESTER->new_file_, MPI_MODE_RDONLY, MPI_COMM_SELF);
     REQUIRE(TESTER->status_orig_ != MPI_SUCCESS);
     TESTER->test_open(TESTER->new_file_, MPI_MODE_RDWR | MPI_MODE_EXCL,
@@ -109,7 +109,7 @@ TEST_CASE("OpenCollective", "[process=" + std::to_string(TESTER->comm_size_) +
     "[operation=single_open]"
     "[repetition=1][file=1]") {
   TESTER->Pretest();
-  SECTION("open on non-existant shared file") {
+  SECTION("open on non-existent shared file") {
     TESTER->test_open(TESTER->shared_new_file_,
                       MPI_MODE_RDONLY | MPI_MODE_EXCL, MPI_COMM_WORLD);
     REQUIRE(TESTER->status_orig_ != MPI_SUCCESS);

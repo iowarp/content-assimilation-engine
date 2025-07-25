@@ -19,7 +19,7 @@ TEST_CASE("Open", "[process=" + std::to_string(TESTER->comm_size_) +
                       "[operation=single_open]"
                       "[repetition=1][file=1]") {
   TESTER->Pretest();
-  SECTION("open non-existant file") {
+  SECTION("open non-existent file") {
     TESTER->test_open(TESTER->new_file_, O_WRONLY);
     REQUIRE(TESTER->fh_orig_ == -1);
     TESTER->test_open(TESTER->new_file_, O_RDONLY);

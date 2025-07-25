@@ -74,7 +74,7 @@ struct UserPathInfo {
 };
 
 /**
- * Configuration used to intialize client
+ * Configuration used to initialize client
  * */
 class ConfigurationManager : public hshm::BaseConfig {
 public:

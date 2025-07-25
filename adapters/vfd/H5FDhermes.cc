@@ -347,7 +347,7 @@ static herr_t H5FD__hermes_query(const H5FD_t *_file,
                                  unsigned long *flags /* out */) {
   /* Set the VFL feature flags that this driver supports */
   /* Notice: the Mirror VFD Writer currently uses only the hermes driver as
-   * the underying driver -- as such, the Mirror VFD implementation copies
+   * the underlying driver -- as such, the Mirror VFD implementation copies
    * these feature flags as its own. Any modifications made here must be
    * reflected in H5FDmirror.c
    * -- JOS 2020-01-13

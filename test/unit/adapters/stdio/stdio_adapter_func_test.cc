@@ -680,7 +680,7 @@ TEST_CASE("Open64", "[process=" + std::to_string(TESTER->comm_size_) +
     "[operation=single_open]"
     "[repetition=1][file=1]") {
   TESTER->Pretest();
-  SECTION("open non-existant file") {
+  SECTION("open non-existent file") {
     FILE* fh = fopen64(TESTER->new_file_.hermes_.c_str(), "r");
     REQUIRE(fh == nullptr);
     fh = fopen64(TESTER->new_file_.hermes_.c_str(), "r+");
