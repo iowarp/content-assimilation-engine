@@ -16,6 +16,10 @@
 #include <future>
 #include <thread>
 #include <algorithm>
+#include <mutex>
+#include <fstream>
+#include <cctype> // For isspace
+#include <cstdio> // For std::remove
 
 using namespace cae;
 namespace fs = std::filesystem;
@@ -380,6 +384,54 @@ void ProcessDataEntryAsync(const OmniJobConfig::DataEntry &entry, int nprocs,
   }
 }
 
+// Parse hostfile into vector of hostnames
+std::vector<std::string> ParseHostfile(const std::string &hostfile_path) {
+    std::vector<std::string> hosts;
+    std::ifstream infile(hostfile_path);
+    std::string line;
+    while (std::getline(infile, line)) {
+        // Remove comments and whitespace
+        auto comment_pos = line.find('#');
+        if (comment_pos != std::string::npos) line = line.substr(0, comment_pos);
+        line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
+        if (!line.empty()) hosts.push_back(line);
+    }
+    return hosts;
+}
+
+// Allocate least-loaded nodes for a job
+std::vector<int> AllocateNodes(int num_nodes, std::vector<int> &node_proc_counts, std::mutex &mtx) {
+    std::lock_guard<std::mutex> lock(mtx);
+    std::vector<std::pair<int, int>> load_index;
+    for (int i = 0; i < node_proc_counts.size(); ++i)
+        load_index.push_back({node_proc_counts[i], i});
+    std::sort(load_index.begin(), load_index.end());
+    std::vector<int> selected;
+    for (int i = 0; i < num_nodes; ++i) {
+        selected.push_back(load_index[i].second);
+        node_proc_counts[load_index[i].second]++;
+    }
+    return selected;
+}
+
+// Write a temporary hostfile for a job
+std::string WriteTempHostfile(const std::vector<std::string> &hosts, const std::vector<int> &indices, int job_id) {
+    std::string temp_hostfile = "hostfile_job_" + std::to_string(job_id) + ".tmp";
+    std::ofstream outfile(temp_hostfile);
+    for (int idx : indices) outfile << hosts[idx] << std::endl;
+    outfile.close();
+    
+    // Log the node allocation for validation
+    std::cout << "Job " << job_id << " allocated nodes: ";
+    for (size_t i = 0; i < indices.size(); ++i) {
+        if (i > 0) std::cout << ", ";
+        std::cout << hosts[indices[i]];
+    }
+    std::cout << " (hostfile: " << temp_hostfile << ")" << std::endl;
+    
+    return temp_hostfile;
+}
+
 int main(int argc, char *argv[]) {
   // Initialize MPI for the main orchestrator
   MPI_Init(&argc, &argv);
@@ -406,6 +458,14 @@ int main(int argc, char *argv[]) {
       hostfile = getenv("OMNI_HOSTFILE");
     }
 
+    std::vector<std::string> hosts;
+    std::vector<int> node_proc_counts;
+    std::mutex node_mutex;
+    if (!hostfile.empty()) {
+      hosts = ParseHostfile(hostfile);
+      node_proc_counts.resize(hosts.size(), 0);
+    }
+
     if (rank == 0) {
       std::cout << "OMNI Content Assimilation Engine" << std::endl;
       std::cout << "=================================" << std::endl;
@@ -416,29 +476,39 @@ int main(int argc, char *argv[]) {
       std::cout << "Number of data entries: " << config.data_entries.size()
                 << std::endl;
 
-      // Process each data entry
+      // Launch all jobs concurrently, balancing node usage
+      int job_id = 0;
+      std::vector<std::future<void>> job_futures;
       for (size_t i = 0; i < config.data_entries.size(); ++i) {
         const auto &entry = config.data_entries[i];
-
-        std::cout << "\nData Entry " << (i + 1) << "/"
-                  << config.data_entries.size() << ": " << entry.paths[0]
-                  << std::endl;
-
-        // Use filesystem repo client to recommend scale
         FilesystemRepoClient fs_client;
         int nprocs, nthreads;
-        fs_client.RecommendScaleForFile(entry.paths[0], config.max_scale, nprocs,
-                                        nthreads);
+        fs_client.RecommendScaleForFile(entry.paths[0], config.max_scale, nprocs, nthreads);
 
-        // Process the data entry using MPI subprocess
-        if (entry.paths.size() > 1) {
-          // Use async processing for multiple files
-          ProcessDataEntryAsync(entry, nprocs, hostfile);
+        int nodes_needed = (!hosts.empty()) ? std::min(nprocs, (int)hosts.size()) : nprocs;
+        std::vector<int> node_indices;
+        std::string temp_hostfile;
+        if (!hosts.empty()) {
+          node_indices = AllocateNodes(nodes_needed, node_proc_counts, node_mutex);
+          temp_hostfile = WriteTempHostfile(hosts, node_indices, job_id);
         } else {
-          // Use synchronous processing for single file
-          ProcessDataEntry(entry, nprocs, hostfile);
+          temp_hostfile = hostfile; // fallback: use original hostfile or none
         }
+
+        // Launch each job asynchronously
+        job_futures.push_back(std::async(std::launch::async, [&, entry, nprocs, temp_hostfile, job_id]() {
+          if (entry.paths.size() > 1)
+            ProcessDataEntryAsync(entry, nprocs, temp_hostfile);
+          else
+            ProcessDataEntry(entry, nprocs, temp_hostfile);
+          if (!temp_hostfile.empty() && temp_hostfile.find("hostfile_job_") == 0) {
+            std::remove(temp_hostfile.c_str());
+          }
+        }));
+        job_id++;
       }
+      // Wait for all jobs to finish
+      for (auto &f : job_futures) f.wait();
 
       std::cout << "\n" << std::string(50, '=') << std::endl;
       std::cout << "✓ All data entries processed successfully!" << std::endl;
