@@ -589,8 +589,8 @@ int read_omni(std::string input_file) {
   std::string hash;
 #endif
 
-  int offset = -1;
-  int nbyte = -1;
+  size_t offset = 0;
+  size_t nbyte = 0;
 
   bool run = false;
   int res = -1;
@@ -640,11 +640,11 @@ int read_omni(std::string input_file) {
 #endif
 
         if (key == "offset") {
-          offset = it->second.as<int>();
+          offset = it->second.as<size_t>();
         }
 
         if (key == "nbyte") {
-          nbyte = it->second.as<int>();
+          nbyte = it->second.as<size_t>();
           std::vector<char> buffer(nbyte);
           unsigned char *ptr = reinterpret_cast<unsigned char *>(buffer.data());
           if (!path.empty()) {
@@ -737,10 +737,10 @@ int read_omni(std::string input_file) {
   if (!uri.empty()) {
     long long start = -1;
     long long end = -1;
-    if (offset >= 0) {
+    if (offset > 0) {
       start = (long long)offset;
     }
-    if (nbyte >= 0) {
+    if (nbyte > 0) {
       end = (long long)(offset + nbyte);
     }
 
