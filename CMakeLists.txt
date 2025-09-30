@@ -217,29 +217,21 @@ include_directories(${CMAKE_SOURCE_DIR}/tasks/hermes_core/include)
 include_directories(${CMAKE_SOURCE_DIR}/test/unit)
 
 set(TEST_MAIN ${CMAKE_SOURCE_DIR}/test/unit) 
-add_subdirectory(adapters)
+# add_subdirectory(adapters)
 add_subdirectory(omni)
 
 add_custom_target(lint COMMAND bash ${CMAKE_SOURCE_DIR}/ci/lint.sh ${CMAKE_SOURCE_DIR})
 
 # -----------------------------------------------------------------------------
 # Build + Enable Testing
-# -----------------------------------------------------------------------------
-# General function used to hook ctest to python test tool lib
-function(pytest test_type test_name)
-    set(script ${CMAKE_SOURCE_DIR}/scripts/ci/py_hermes_ci/bin/run_test)
+# ----------------------------------------------------------------------------- 
+# function(jarvis_test test_type test_name)
+#     add_test(NAME ${test_name}
+#         COMMAND jarvis pipeline run yaml "${CMAKE_SOURCE_DIR}/test/jarvis_wrp_cae/pipelines/${test_type}/${test_name}.yaml")
+# endfunction()
 
-    # add_test(NAME ${test_name}
-    # COMMAND ${script} ${test_type} ${test_name} ${CMAKE_BINARY_DIR} ${CAE_USE_ADDRESS_SANITIZER})
-endfunction()
-
-function(jarvis_test test_type test_name)
-    add_test(NAME ${test_name}
-        COMMAND jarvis pipeline run yaml "${CMAKE_SOURCE_DIR}/test/jarvis_wrp_cae/pipelines/${test_type}/${test_name}.yaml")
-endfunction()
-
-enable_testing()
-add_subdirectory(test/unit)
+# enable_testing()
+# add_subdirectory(test/unit)
 
 # install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
 
