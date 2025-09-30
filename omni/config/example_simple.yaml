@@ -1,0 +1,17 @@
+# Simple OMNI example using repository data files
+name: example_data_ingestion
+max_scale: 4  # Maximum number of processes
+
+data:
+  - path: data/A46_xx.parquet
+    offset: 0
+    size: 31744
+    description:
+      - parquet
+      - structured_data
+
+  - path: data/datahub.csv
+    range: [0, 671]
+    description:
+      - csv
+      - tabular

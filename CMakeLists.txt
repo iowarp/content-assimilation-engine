@@ -107,20 +107,22 @@ add_custom_target(coverage COMMAND bash ${CMAKE_SOURCE_DIR}/ci/coverage.sh
 # ------------------------------------------------------------------------------
 # Setup install and output Directories
 # ------------------------------------------------------------------------------
+include(GNUInstallDirs)
+
 if(NOT CAE_INSTALL_BIN_DIR)
-    set(CAE_INSTALL_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
+    set(CAE_INSTALL_BIN_DIR ${CMAKE_INSTALL_BINDIR})
 endif()
 
 if(NOT CAE_INSTALL_LIB_DIR)
-    set(CAE_INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+    set(CAE_INSTALL_LIB_DIR ${CMAKE_INSTALL_LIBDIR})
 endif()
 
 if(NOT CAE_INSTALL_INCLUDE_DIR)
-    set(CAE_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
+    set(CAE_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
 
 if(NOT CAE_INSTALL_DATA_DIR)
-    set(CAE_INSTALL_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share)
+    set(CAE_INSTALL_DATA_DIR ${CMAKE_INSTALL_DATADIR})
 endif()
 
 # -----------------------------------------------------------------------------
@@ -132,57 +134,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 list(APPEND CMAKE_INSTALL_RPATH "${CAE_INSTALL_LIB_DIR}")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
-# Include most packages needed by both client and host
-find_package(Hermes REQUIRED)
-message("Found hermes at ${Hermes_LIB_DIR}")
-
-# ENABLE GPU SUPPORT
-if(CHIMAERA_ENABLE_CUDA)
-    hshm_enable_cuda(17)
-endif()
-
-if(CHIMAERA_ENABLE_ROCM)
-    hshm_enable_rocm("HIP" 17)
-endif()
-
-# Zeromq
-# pkg_check_modules(ZMQ REQUIRED libzmq)
-# include_directories(${ZMQ_INCLUDE_DIRS})
-# message("Found libzmq at: ${ZMQ_INCLUDE_DIRS}")
-
-# HDF5 (only for VFD, not the basic client)
-if(CAE_ENABLE_VFD)
-    set(CAE_REQUIRED_HDF5_VERSION 1.14.0)
-    set(CAE_REQUIRED_HDF5_COMPONENTS C)
-    find_package(HDF5 ${CAE_REQUIRED_HDF5_VERSION} CONFIG NAMES hdf5
-        COMPONENTS ${CAE_REQUIRED_HDF5_COMPONENTS} shared)
-
-    if(HDF5_FOUND)
-        message(STATUS "found HDF5 ${HDF5_VERSION} at ${HDF5_INCLUDE_DIR}")
-        set(HDF5_CAE_VFD_EXT_INCLUDE_DEPENDENCIES
-            ${HDF5_CAE_VFD_EXT_INCLUDE_DEPENDENCIES}
-            ${HDF5_INCLUDE_DIR})
-        set(HDF5_CAE_VFD_EXT_LIB_DEPENDENCIES
-            ${HDF5_CAE_VFD_EXT_LIB_DEPENDENCIES}
-            ${HDF5_C_SHARED_LIBRARY})
-    else()
-        # Allow for HDF5 autotools builds
-        find_package(HDF5 ${CAE_REQUIRED_HDF5_VERSION} MODULE REQUIRED
-            COMPONENTS ${CAE_REQUIRED_HDF5_COMPONENTS})
-
-        if(HDF5_FOUND)
-            set(HDF5_CAE_VFD_EXT_INCLUDE_DEPENDENCIES
-                ${HDF5_CAE_VFD_EXT_INCLUDE_DEPENDENCIES}
-                ${HDF5_INCLUDE_DIRS})
-            set(HDF5_CAE_VFD_EXT_LIB_DEPENDENCIES
-                ${HDF5_CAE_VFD_EXT_LIB_DEPENDENCIES}
-                ${HDF5_LIBRARIES})
-        else()
-            message(FATAL_ERROR "Could not find HDF5, please set HDF5_DIR (1.13.0) or HDF5_ROOT (1.13.1).")
-        endif()
-    endif()
-endif()
 
 # ------------------------------------------------------------------------------
 # Setup CMake Environment
@@ -204,44 +155,6 @@ set(CAE_ADAPTER_DIR ${CMAKE_SOURCE_DIR}/adapters)
 set(CAE_IO_CLIENT_DIR ${CMAKE_SOURCE_DIR}/adapters)
 set(CAE_VFD_DIR_NAME "vfd")
 
-# Main includes
-include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/include)
-link_directories(${HermesShm_LIBRARY_DIRS})
-
-# Task includes
-include_directories(${CMAKE_SOURCE_DIR}/tasks)
-include_directories(${CMAKE_SOURCE_DIR}/tasks/hermes_core/include)
-
-# Test includes
-include_directories(${CMAKE_SOURCE_DIR}/test/unit)
-
 set(TEST_MAIN ${CMAKE_SOURCE_DIR}/test/unit) 
 # add_subdirectory(adapters)
 add_subdirectory(omni)
-
-add_custom_target(lint COMMAND bash ${CMAKE_SOURCE_DIR}/ci/lint.sh ${CMAKE_SOURCE_DIR})
-
-# -----------------------------------------------------------------------------
-# Build + Enable Testing
-# -----------------------------------------------------------------------------
-# # General function used to hook ctest to python test tool lib
-# function(pytest test_type test_name)
-#     set(script ${CMAKE_SOURCE_DIR}/scripts/ci/py_hermes_ci/bin/run_test)
-
-#     # add_test(NAME ${test_name}
-#     # COMMAND ${script} ${test_type} ${test_name} ${CMAKE_BINARY_DIR} ${CAE_USE_ADDRESS_SANITIZER})
-# endfunction()
-
-# function(jarvis_test test_type test_name)
-#     add_test(NAME ${test_name}
-#         COMMAND jarvis pipeline run yaml "${CMAKE_SOURCE_DIR}/test/jarvis_wrp_cae/pipelines/${test_type}/${test_name}.yaml")
-# endfunction()
-
-# enable_testing()
-# add_subdirectory(test/unit)
-
-# install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
-
-# jarvis_repo_add("${CMAKE_SOURCE_DIR}/test/jarvis_wrp_cae" "${CMAKE_SOURCE_DIR}/test/jarvis_wrp_cae/pipelines")
-

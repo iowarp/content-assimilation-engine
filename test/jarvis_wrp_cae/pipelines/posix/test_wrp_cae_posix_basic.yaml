@@ -1,7 +1,0 @@
-name: test_wrp_cae_posix_basic
-env: hermes
-pkgs:
-  - pkg_type: cae_posix_tests
-    pkg_name: cae_posix_tests
-    test_file: posix_basic
-    hermes: false

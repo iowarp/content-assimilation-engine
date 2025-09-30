@@ -1,7 +1,0 @@
-name: test_terra_hdf5_load
-env: hermes
-pkgs:
-  - pkg_type: omni_parse
-    pkg_name: omni_parse
-    omni_yaml: ${PWD}/omni/config/terra_hdf5_load.yaml
-    sleep: 1 

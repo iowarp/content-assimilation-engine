@@ -1,8 +1,0 @@
-name: test_wrp_cae_mpiio_basic_async
-env: hermes
-pkgs:
-  - pkg_type: cae_mpiio_tests
-    pkg_name: cae_mpiio_tests
-    test_file: mpiio_basic
-    hermes: false
-    sync: async

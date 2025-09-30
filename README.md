@@ -8,78 +8,130 @@ A high-performance data ingestion and processing engine designed for heterogeneo
 [![docker](https://github.com/iowarp/content-assimilation-engine/actions/workflows/docker.yml/badge.svg)](https://github.com/iowarp/content-assimilation-engine/actions/workflows/docker.yml)
 [![synology](https://github.com/iowarp/content-assimilation-engine/actions/workflows/synology.yml/badge.svg)](https://github.com/iowarp/content-assimilation-engine/actions/workflows/synology.yml)
 
-
-
-## Quick Start
+## Quick Start with OMNI
 
 ### Prerequisites
 
-- Spack package manager
-- CMake 3.16+
-- C++17-capable compiler
-
-### Installation
-
-**Option 1: Using Spack (Recommended)**
-
+**Ubuntu/Debian:**
 ```bash
-spack install iowarp +mpiio +vfd +compress +encrypt
-spack load iowarp
+sudo apt-get install -y libpoco-dev libyaml-cpp-dev cmake build-essential libopenmpi-dev
 ```
 
-**Option 2: Manual Build**
+**macOS:**
+```bash
+brew install poco yaml-cpp cmake open-mpi
+```
+
+**Windows:**
+```bash
+# Use vcpkg or build dependencies from source
+vcpkg install poco yaml-cpp
+```
+
+### Building OMNI
 
 ```bash
+git clone https://github.com/iowarp/content-assimilation-engine.git
 cd content-assimilation-engine
-mkdir build
-cd build
-cmake --preset debug .
-cd build
-cmake --build .
-cmake --install .
+mkdir build && cd build
+cmake ..
+make
+make install
 ```
 
-## Testing
+This builds and installs two executables:
+- `wrp` - Main YAML job orchestrator
+- `wrp_binary_format_mpi` - MPI binary format processor
 
-### Running Tests
+### Running an Example
+
+The repository includes a simple example configuration at `omni/config/example_simple.yaml`:
+
+```yaml
+# Simple OMNI example using repository data files
+name: example_data_ingestion
+max_scale: 4  # Maximum number of processes
+
+data:
+  - path: data/A46_xx.parquet
+    offset: 0
+    size: 31744
+    description:
+      - parquet
+      - structured_data
+
+  - path: data/datahub.csv
+    range: [0, 671]
+    description:
+      - csv
+      - tabular
+```
+
+Run it from the repository root:
 
 ```bash
-spack load iowarp
-module load content-assimilation-engine
-jarvis env build hermes
-ctest
+mpirun -np 4 wrp omni/config/example_simple.yaml
 ```
 
-### Continuous Integration
+### OMNI Format Specification
 
-The project includes comprehensive CI/CD pipelines:
-- **Cross-platform testing**: Windows, macOS, Ubuntu
-- **Container testing**: Docker and Synology NAS
-- **Automated builds**: Multiple configurations and environments
+The OMNI format uses YAML to describe data ingestion jobs:
+
+```yaml
+name: job_name              # Job identifier (required)
+max_scale: 100              # Max number of MPI processes (required)
+
+data:                       # List of data sources
+  - path: /file/path        # File path (required)
+    offset: 0               # Starting byte offset (optional)
+    size: 1024              # Bytes to read from offset (optional)
+    range: [0, 1024]        # Alternative: [start, end] byte range (optional)
+    description:            # Tags describing the data (optional)
+      - binary
+      - structured
+    hash: sha256_value      # Integrity verification (optional)
+```
+
+**Key Fields:**
+- `path`: Absolute or relative file path
+- `offset` + `size`: Read `size` bytes starting at `offset`
+- `range`: Alternative to offset/size, specifies [start, end] bytes
+- `description`: List of tags for metadata/categorization
+- `hash`: SHA256 hash for data verification
+
+### Example Configurations
+
+The repository includes several example configurations in `omni/config/`:
+- `quick_test.yaml` - Simple test case
+- `demo_job.yaml` - Demonstration job
+- `example_job.yaml` - Annotated example with all options
+- `wildcard_test.yaml` - Pattern matching examples
+
+Run examples:
+```bash
+cd build/omni/config
+mpirun -np 2 ../../bin/wrp quick_test.yaml
+```
 
 ## Development
 
-### Build Presets
-
-The project uses CMake presets for different build configurations:
-- `debug`: Development build with debugging symbols
-- Additional presets available in `CMakePresets.json`
-
 ### Project Structure
 
-- `adapters/`: Storage and I/O adapters
-- `omni/`: Core engine components
-- `test/`: Unit tests and integration tests
-- `data/`: Sample datasets and test data
-- `config/`: Configuration files and templates
+- `omni/` - OMNI module (job orchestration and format processing)
+  - `format/` - Binary format handlers
+  - `repo/` - Repository and storage backends
+  - `config/` - Example job configurations
+- `adapters/` - Storage and I/O adapters
+- `test/` - Unit and integration tests
 
-## Contributing
+### Build Options
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+```bash
+cmake -DCAE_ENABLE_POSIX_ADAPTER=ON \
+      -DCAE_ENABLE_MPIIO_ADAPTER=ON \
+      -DCAE_ENABLE_VFD=ON \
+      ..
+```
 
 ## License
 
@@ -90,5 +142,4 @@ This project is licensed under the BSD-3-Clause License - see the [LICENSE](LICE
 ## Links
 
 - **IOWarp Organization**: [https://github.com/iowarp](https://github.com/iowarp)
-- **Documentation**: Coming soon
 - **Issues**: [GitHub Issues](https://github.com/iowarp/content-assimilation-engine/issues)
