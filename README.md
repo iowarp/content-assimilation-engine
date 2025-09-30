@@ -10,25 +10,14 @@ A high-performance data ingestion and processing engine designed for heterogeneo
 
 ## Quick Start with OMNI
 
-### Prerequisites
+### IOWarp
 
 **Ubuntu/Debian:**
 ```bash
-sudo apt-get install -y libpoco-dev libyaml-cpp-dev cmake build-essential libopenmpi-dev
+spack install iowarp
 ```
 
-**macOS:**
-```bash
-brew install poco yaml-cpp cmake open-mpi
-```
-
-**Windows:**
-```bash
-# Use vcpkg or build dependencies from source
-vcpkg install poco yaml-cpp
-```
-
-### Building OMNI
+### Building OMNI (manually)
 
 ```bash
 git clone https://github.com/iowarp/content-assimilation-engine.git
@@ -121,17 +110,8 @@ mpirun -np 2 ../../bin/wrp quick_test.yaml
   - `format/` - Binary format handlers
   - `repo/` - Repository and storage backends
   - `config/` - Example job configurations
-- `adapters/` - Storage and I/O adapters
-- `test/` - Unit and integration tests
+- `data/` - Sample datasets for testing
 
-### Build Options
-
-```bash
-cmake -DCAE_ENABLE_POSIX_ADAPTER=ON \
-      -DCAE_ENABLE_MPIIO_ADAPTER=ON \
-      -DCAE_ENABLE_VFD=ON \
-      ..
-```
 
 ## License
 
